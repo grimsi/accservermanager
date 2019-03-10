@@ -2,12 +2,12 @@
 
 ## Introduction
 This is the backend component of my WIP AC Competizione Server Manager.
-For now the server manager will just consists of a backend which provides a simple RESTful API.
+For now the server manager will just consist of a backend which provides a simple RESTful API.
 You can take a look at the API spec by reading the "api-spec.yaml" or copying the content of this file into the [Swagger.io Editor](http://editor.swagger.io/) to view a graphical representation.
 
 ## Goal of this project
 This project aims to provide a robust and reliable management interface to manage a great number of gameserver instances for AC Competizione.
-The primary goal of this project is **not** to compete with existing server managers such as [gotzls accservermanager](https://github.com/gotzl/accservermanager) but rather target more business oriented use cases. For this reason there will be **no** UI in the beginning, but it should be very easy for interested developers to develop their own UI based on my api specification.
+The primary goal of this project is **not** to compete with existing server managers such as [gotzls accservermanager](https://github.com/gotzl/accservermanager) but rather target more professional users. For this reason there will be **no** UI in the beginning, but it should be very easy for interested developers to implement their own UI based on my API specification.
 The main goal for me is to learn how to work with a lot of different cutting edge technologies, so don't expect too much from my source code since most of the stuff I will work with is pretty new to me.
 
 ## Technology Stack
