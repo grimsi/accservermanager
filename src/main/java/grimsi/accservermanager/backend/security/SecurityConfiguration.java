@@ -36,7 +36,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "*/login").permitAll()
+                .antMatchers(HttpMethod.POST, "v1/login").permitAll()
+                .and().authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/info", "/prometheus").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), configuration))
