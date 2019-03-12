@@ -15,7 +15,7 @@ The backend will make heavy use of the Java Spring framework, including Spring S
 For persistence I want to use MongoDB since it probably is the most flexible NoSQL database and has great support for a variety of use cases.
 I don't plan on implementing a user management but if there is a need for it I would strongly suggest using strong password hashing algorithms like BCrypt. Password security is no joke and sadly I have seen it done wrong even by big companies, so I want to do it right.
 The backend will be deployed in a Docker container, not because it is needed but because I want to learn how to work with Docker and how to manage your own images. Also this makes deployment easier in a production environment.
-The gameservers will also be deployed in sibling containers, so each gameserver instance will have its own docker container. This makes them manageable and will probably improve security if done correctly.
+The gameservers will also be deployed in sibling containers, so each gameserver instanceDto will have its own docker container. This makes them manageable and will probably improve security if done correctly.
 If I decide to provide a frontend myself it will most certainly be a Angular based web frontend since this also is widely adopted and I already know my way with Angular. But a frontend is not in the scope of the first versions apart from the automatically generated Swagger UI which can be used although it's meant for testing the API.
 
 ## How can I help?

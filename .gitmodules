@@ -1,0 +1,3 @@
+[submodule "api-spec"]
+	path = api-spec
+	url = https://github.com/grimsi/accservermanager-api
