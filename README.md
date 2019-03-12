@@ -18,6 +18,12 @@ The backend will be deployed in a Docker container, not because it is needed but
 The gameservers will also be deployed in sibling containers, so each gameserver instanceDto will have its own docker container. This makes them manageable and will probably improve security if done correctly.
 If I decide to provide a frontend myself it will most certainly be a Angular based web frontend since this also is widely adopted and I already know my way with Angular. But a frontend is not in the scope of the first versions apart from the automatically generated Swagger UI which can be used although it's meant for testing the API.
 
+## Current functionality
+I just started this project so it will take some time until a first release will be created.
+Currently you can login with a configurable user. The backend will return a signed JSON Web Token that has to be sent with every following request. The username and password can also be set via environment variable (which makes it possible to set it with docker) and the password will be stored in a MongoDB instance using the BCrypt hash algorithm.
+
+This means that the foundation is almost done, the next step will be the integration of Docker. After that it shouldn't take too long until a first release.
+
 ## How can I help?
 In the beginning you sadly can't really help me because I need to define the API first. But once that's done there is nobody stopping you from developing your custom UI which works with my backend. The current version of the API spec will always be publicy available. But remember, since we haven't hit version 1.0.0 *yet* [the API is still not stable and can always change, breaking current implementations](https://semver.org/#spec-item-4).
 
