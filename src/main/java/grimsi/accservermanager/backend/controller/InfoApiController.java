@@ -1,8 +1,8 @@
 package grimsi.accservermanager.backend.controller;
 
-import grimsi.accservermanager.backend.api.InfoApi;
-import grimsi.accservermanager.backend.dto.SysteminfoDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import grimsi.accservermanager.backend.api.InfoApi;
+import grimsi.accservermanager.backend.dto.SystemInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,9 +27,9 @@ public class InfoApiController implements InfoApi {
         this.request = request;
     }
 
-    public ResponseEntity<SysteminfoDto> getInfo() {
+    public ResponseEntity<SystemInfoDto> getInfo() {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<SysteminfoDto>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<SystemInfoDto>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }

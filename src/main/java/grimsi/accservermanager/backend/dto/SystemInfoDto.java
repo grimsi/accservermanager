@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ErrorDto {
-    private Integer code;
-    private String message;
+public class SystemInfoDto {
+    private String version;
+    private String accVersion;
+    private Boolean metricsEnabled;
 }

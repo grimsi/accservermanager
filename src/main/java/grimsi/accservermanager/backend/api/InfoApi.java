@@ -6,8 +6,11 @@
 package grimsi.accservermanager.backend.api;
 
 import grimsi.accservermanager.backend.dto.ErrorDto;
-import grimsi.accservermanager.backend.dto.SysteminfoDto;
-import io.swagger.annotations.*;
+import grimsi.accservermanager.backend.dto.SystemInfoDto;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Api(value = "info", description = "the info API")
 public interface InfoApi {
 
-    @ApiOperation(value = "Get information about the system", nickname = "getInfo", notes = "", response = SysteminfoDto.class, tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Expected response to a valid request", response = SysteminfoDto.class),
-        @ApiResponse(code = 200, message = "unexpected error", response = ErrorDto.class) })
+    @ApiOperation(value = "Get information about the system", nickname = "getInfo", notes = "", response = SystemInfoDto.class, tags = {})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Expected response to a valid request", response = SystemInfoDto.class),
+            @ApiResponse(code = 200, message = "unexpected error", response = ErrorDto.class)})
     @RequestMapping(value = "/info",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<SysteminfoDto> getInfo();
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<SystemInfoDto> getInfo();
 
 }

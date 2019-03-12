@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ErrorDto {
-    private Integer code;
-    private String message;
+public class SettingsJsonDto {
+    private String serverName;
+    private String password;
+    private String adminPassword;
+    private int configVersion = 1;
 }
