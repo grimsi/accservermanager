@@ -10,10 +10,10 @@ public class Instance {
     @Id
     public String id;
 
-    private String name;
-    private InstanceState state;
-    private String container;
-    
+    public String name;
+    public InstanceState state;
+    public String container;
+
     @DBRef
-    private Config config;
+    public Config config;
 }

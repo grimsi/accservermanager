@@ -1,11 +1,12 @@
 package grimsi.accservermanager.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import grimsi.accservermanager.backend.api.InstancesApi;
 import grimsi.accservermanager.backend.dto.ConfigDto;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.enums.InstanceState;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
+import grimsi.accservermanager.backend.service.JsonSchemaService;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 
 @javax.annotation.Generated(value = "grimsi.accservermanager.backend.codegen.v3.generators.java.SpringCodegen", date = "2019-03-10T17:37:16.729Z[GMT]")
@@ -29,23 +30,28 @@ public class InstancesApiController implements InstancesApi {
 
     private final HttpServletRequest request;
 
+    private final JsonSchemaService jsonSchemaService;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public InstancesApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public InstancesApiController(ObjectMapper objectMapper,
+                                  HttpServletRequest request,
+                                  JsonSchemaService jsonSchemaService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.jsonSchemaService = jsonSchemaService;
     }
 
-    public ResponseEntity<ConfigDto> createInstance(@ApiParam(value = "A JSON object containing the instance" ,required=true )  @Valid @RequestBody InstanceDto body) {
+    public ResponseEntity<ConfigDto> createInstance(@ApiParam(value = "A JSON object containing the instance", required = true) @Valid @RequestBody InstanceDto body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<ConfigDto>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> deleteInstanceById(@ApiParam(value = "The id of the instance to delete",required=true) @PathVariable("instanceId") String instanceId) {
+    public ResponseEntity<Void> deleteInstanceById(@ApiParam(value = "The id of the instance to delete", required = true) @PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<InstanceDto> getInstanceById(@ApiParam(value = "The id of the instance to retrieve",required=true) @PathVariable("instanceId") String instanceId) {
+    public ResponseEntity<InstanceDto> getInstanceById(@ApiParam(value = "The id of the instance to retrieve", required = true) @PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<InstanceDto>(HttpStatus.NOT_IMPLEMENTED);
     }
@@ -55,19 +61,26 @@ public class InstancesApiController implements InstancesApi {
         return new ResponseEntity<ArrayList<InstanceDto>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> startInstanceById(@ApiParam(value = "The id of the instance to start",required=true) @PathVariable("instanceId") String instanceId) {
+    public ResponseEntity<Void> startInstanceById(@ApiParam(value = "The id of the instance to start", required = true) @PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> stopInstanceById(@ApiParam(value = "The id of the instance to stop",required=true) @PathVariable("instanceId") String instanceId) {
+    public ResponseEntity<Void> stopInstanceById(@ApiParam(value = "The id of the instance to stop", required = true) @PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<InstanceDto> updateInstanceById(@ApiParam(value = "A JSON object containing the instance" ,required=true )  @Valid @RequestBody InstanceDto body, @ApiParam(value = "The id of the instance to retrieve",required=true) @PathVariable("instanceId") String instanceId) {
+    public ResponseEntity<InstanceDto> updateInstanceById(@ApiParam(value = "A JSON object containing the instance", required = true) @Valid @RequestBody InstanceDto body, @ApiParam(value = "The id of the instance to retrieve", required = true) @PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<InstanceDto>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    public ResponseEntity<String> getInstanceSchema() {
+        String schema = jsonSchemaService.getJsonSchema(InstanceDto.class);
+        if (schema == null) {
+            throw new NullPointerException("Error parsing JSON schema");
+        }
+        return new ResponseEntity<String>(schema, HttpStatus.OK);
+    }
 }

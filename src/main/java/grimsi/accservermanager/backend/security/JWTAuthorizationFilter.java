@@ -2,8 +2,10 @@ package grimsi.accservermanager.backend.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+
+    private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private ApplicationConfiguration config;
 
@@ -47,13 +51,17 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader("Authorization");
         if (token != null) {
             // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(config.getSecret().toString().getBytes()))
-                    .build()
-                    .verify(token.replace("Bearer ", ""))
-                    .getSubject();
+            try {
+                String user = JWT.require(Algorithm.HMAC512(config.getSecret().toString().getBytes()))
+                        .build()
+                        .verify(token.replace("Bearer ", ""))
+                        .getSubject();
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                if (user != null) {
+                    return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                }
+            } catch (SignatureVerificationException e) {
+                logger.warn("Error verifying JWT: " + e.getMessage());
             }
             return null;
         }

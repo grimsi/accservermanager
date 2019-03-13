@@ -19,18 +19,17 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Autowired
     private ApplicationConfiguration configuration;
-
     private UserService userService;
 
     public SecurityConfiguration(UserService userService) {
         this.userService = userService;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -40,6 +39,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/info", "/prometheus").permitAll()
                 .anyRequest().authenticated()
+                .and().authorizeRequests()
+                .antMatchers("/v1/v2/api-docs", "/v1/swagger-resources/**", "/v1/swagger-ui.html", "/v1/webjars/**", "/v1/swagger.json").permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), configuration))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), configuration))
@@ -48,12 +49,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(this.passwordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }

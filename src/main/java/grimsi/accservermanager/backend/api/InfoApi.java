@@ -22,7 +22,7 @@ public interface InfoApi {
     @ApiOperation(value = "Get information about the system", nickname = "getInfo", notes = "", response = SystemInfoDto.class, tags = {})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Expected response to a valid request", response = SystemInfoDto.class),
-            @ApiResponse(code = 200, message = "unexpected error", response = ErrorDto.class)})
+            @ApiResponse(code = 500, message = "unexpected error", response = ErrorDto.class)})
     @RequestMapping(value = "/info",
             produces = {"application/json"},
             method = RequestMethod.GET)

@@ -1,10 +1,16 @@
 package grimsi.accservermanager.backend.documents;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Config {
+    @Id
+    public String id;
+
+    public String name;
+
     @DBRef
     public ConfigurationJson configurationJson;
     @DBRef
