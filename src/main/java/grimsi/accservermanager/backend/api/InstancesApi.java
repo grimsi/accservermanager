@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @javax.annotation.Generated(value = "grimsi.accservermanager.backend.codegen.v3.generators.java.SpringCodegen", date = "2019-03-10T17:37:16.729Z[GMT]")
 @Api(value = "instances", description = "the instances API")
@@ -29,7 +30,7 @@ public interface InstancesApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<ConfigDto> createInstance(@ApiParam(value = "A JSON object containing the instance", required = true) @Valid @RequestBody InstanceDto body);
+    ResponseEntity<InstanceDto> createInstance(@ApiParam(value = "A JSON object containing the instance", required = true) @Valid @RequestBody InstanceDto body);
 
 
     @ApiOperation(value = "Delete a specific instance", nickname = "deleteInstanceById", notes = "", authorizations = {
@@ -62,7 +63,7 @@ public interface InstancesApi {
     @RequestMapping(value = "/instances",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<ArrayList<InstanceDto>> listInstances(@ApiParam(value = "Filter by name") @Valid @RequestParam(value = "name", required = false) String name, @ApiParam(value = "") @Valid @RequestParam(value = "state", required = false) InstanceState state);
+    ResponseEntity<List<InstanceDto>> listInstances(@ApiParam(value = "Filter by name") @Valid @RequestParam(value = "name", required = false) String name, @ApiParam(value = "") @Valid @RequestParam(value = "state", required = false) InstanceState state);
 
 
     @ApiOperation(value = "Start a specific instance", nickname = "startInstanceById", notes = "", authorizations = {

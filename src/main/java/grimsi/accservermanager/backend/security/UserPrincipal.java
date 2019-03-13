@@ -1,6 +1,6 @@
 package grimsi.accservermanager.backend.security;
 
-import grimsi.accservermanager.backend.documents.User;
+import grimsi.accservermanager.backend.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,19 +16,19 @@ public class UserPrincipal implements UserDetails {
     private User user;
     private List<SimpleGrantedAuthority> authorities;
 
-    public UserPrincipal(User user, SimpleGrantedAuthority authority){
+    public UserPrincipal(User user, SimpleGrantedAuthority authority) {
         this.user = user;
-        this.authorities = Collections.singletonList(authority);
+        authorities = Collections.singletonList(authority);
     }
 
     @Override
     public String getPassword() {
-        return this.user.password;
+        return user.password;
     }
 
     @Override
     public String getUsername() {
-        return this.user.username;
+        return user.username;
     }
 
     @Override

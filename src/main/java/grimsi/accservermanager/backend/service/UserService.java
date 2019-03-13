@@ -1,7 +1,7 @@
 package grimsi.accservermanager.backend.service;
 
 import grimsi.accservermanager.backend.dto.UserDto;
-import grimsi.accservermanager.backend.documents.User;
+import grimsi.accservermanager.backend.entity.User;
 import grimsi.accservermanager.backend.repository.UserRepository;
 import grimsi.accservermanager.backend.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +27,20 @@ public class UserService implements UserDetailsService {
         return new UserPrincipal(user, new SimpleGrantedAuthority("admin"));
     }
 
-    public boolean authenticate(String username, String password){
+    public boolean authenticate(String username, String password) {
         User user = userRepository.findByUsername(username);
-        if(user != null){
+        if (user != null) {
             return passwordEncoder.matches(password, user.password);
         }
         return false;
     }
 
 
-    public boolean authenticate(UserDto userDto){
-        return this.authenticate(userDto.getUsername(), userDto.getPassword());
+    public boolean authenticate(UserDto userDto) {
+        return authenticate(userDto.getUsername(), userDto.getPassword());
     }
 
-    public User registerUser(UserDto userDto){
+    public User registerUser(UserDto userDto) {
         User user = new User();
         user.username = userDto.getUsername();
         user.password = passwordEncoder.encode(userDto.getPassword());

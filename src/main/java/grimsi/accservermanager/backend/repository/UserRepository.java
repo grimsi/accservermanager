@@ -1,6 +1,6 @@
 package grimsi.accservermanager.backend.repository;
 
-import grimsi.accservermanager.backend.documents.User;
+import grimsi.accservermanager.backend.entity.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

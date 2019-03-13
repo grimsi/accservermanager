@@ -1,4 +1,4 @@
-package grimsi.accservermanager.backend.documents;
+package grimsi.accservermanager.backend.entity;
 
 import grimsi.accservermanager.backend.enums.SessionType;
 import org.springframework.data.annotation.Id;

@@ -1,4 +1,4 @@
-package grimsi.accservermanager.backend.documents;
+package grimsi.accservermanager.backend.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
