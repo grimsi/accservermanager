@@ -1,20 +1,19 @@
 package grimsi.accservermanager.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import grimsi.accservermanager.backend.api.LoginApi;
 import grimsi.accservermanager.backend.dto.UserDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import grimsi.accservermanager.backend.service.UserService;
-import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-@RestController
+@Controller
 public class LoginApiController implements LoginApi {
 
     private final ObjectMapper objectMapper;
@@ -31,12 +30,12 @@ public class LoginApiController implements LoginApi {
         this.request = request;
     }
 
-    public ResponseEntity<String> auth(@ApiParam(value = "A JSON object containing user credentials" ,required=true )  @Valid @RequestBody UserDto body) {
+    @Override
+    public ResponseEntity<String> auth(@Valid @RequestBody UserDto body) {
         String accept = request.getHeader("Accept");
-        if(userService.authenticate(body)){
+        if (userService.authenticate(body)) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }

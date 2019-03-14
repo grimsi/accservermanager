@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-@javax.annotation.Generated(value = "grimsi.accservermanager.backend.codegen.v3.generators.java.SpringCodegen", date = "2019-03-10T17:37:16.729Z[GMT]")
 @Controller
 public class InfoApiController implements InfoApi {
 
@@ -27,9 +26,10 @@ public class InfoApiController implements InfoApi {
         this.request = request;
     }
 
+    @Override
     public ResponseEntity<SystemInfoDto> getInfo() {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<SystemInfoDto>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }
