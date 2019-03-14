@@ -39,6 +39,10 @@ public class InstanceService {
         instanceRepository.deleteById(id);
     }
 
+    public InstanceDto updateById(String id, InstanceDto instanceDto) {
+        return create(instanceDto);
+    }
+
     public InstanceDto create(InstanceDto instanceDto) {
         Instance instance = convertToEntity(instanceDto);
         instance = instanceRepository.save(instance);

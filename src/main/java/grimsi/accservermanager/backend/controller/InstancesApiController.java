@@ -75,7 +75,8 @@ public class InstancesApiController implements InstancesApi {
 
     public ResponseEntity<InstanceDto> updateInstanceById(@ApiParam(value = "A JSON object containing the instance", required = true) @Valid @RequestBody InstanceDto body, @ApiParam(value = "The id of the instance to retrieve", required = true) @PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<InstanceDto>(HttpStatus.NOT_IMPLEMENTED);
+        InstanceDto instanceDto = instanceService.updateById(instanceId, body);
+        return new ResponseEntity<>(instanceDto, HttpStatus.OK);
     }
 
     public ResponseEntity<String> getInstanceSchema() {

@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.List;
 
 @javax.annotation.Generated(value = "grimsi.accservermanager.backend.codegen.v3.generators.java.SpringCodegen", date = "2019-03-10T17:37:16.729Z[GMT]")
 @Api(value = "configs", description = "the configs API")
@@ -52,15 +52,15 @@ public interface ConfigsApi {
     ResponseEntity<ConfigDto> getConfigById(@ApiParam(value = "The id of the configuration to retrieve", required = true) @PathVariable("configId") String configId);
 
 
-    @ApiOperation(value = "List all configurations", nickname = "listConfigs", notes = "", response = ArrayList.class, authorizations = {
+    @ApiOperation(value = "List all configurations", nickname = "listConfigs", notes = "", response = List.class, authorizations = {
             @Authorization(value = "auth")}, tags = {})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "A array of configurations", response = ArrayList.class),
+            @ApiResponse(code = 200, message = "A array of configurations", response = List.class),
             @ApiResponse(code = 500, message = "unexpected error", response = ErrorDto.class)})
     @RequestMapping(value = "/configs",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<ArrayList<ConfigDto>> listConfigs(@ApiParam(value = "Filter by name") @Valid @RequestParam(value = "name", required = false) String name);
+    ResponseEntity<List<ConfigDto>> listConfigs(@ApiParam(value = "Filter by name") @Valid @RequestParam(value = "name", required = false) String name);
 
 
     @ApiOperation(value = "Update a configuration", nickname = "updateConfigById", notes = "", response = ConfigDto.class, authorizations = {
