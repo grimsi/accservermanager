@@ -21,6 +21,14 @@ If I decide to provide a frontend myself it will most certainly be a Angular bas
 ## Current functionality
 I just started this project so it will take some time until a first release will be created.
 Currently you can login with a configurable user. The backend will return a signed JSON Web Token that has to be sent with every following request. The username and password can also be set via environment variable (which makes it possible to set it with docker) and the password will be stored in a MongoDB instance using the BCrypt hash algorithm.
+The REST API is almost done. You can create, read, update and delete (CRUD) configs and instances and link configs to instances. The API is secured by using stateless JWT as authentication (username and password can be configured in a external property file).
+The backend uses MongoDB to persist all data. For development im using a In-Memory MongoDB instance but it can be easily swapped out for a full fledged instance.
+
+## Next steps
+The next steps will be the implementation of the docker layer which will allow my backend to create, run and manage docker containers containing the game server instances.
+After this I will need to create a docker container for the backend itself including the database (even though I will maybe make if configurable to let the backend use a external MongoDB if a user already has one).
+Last but not least I want to integrate monitoring of the backend and the server instances. This can be very easy or very hard depending on the official documentation of Kunos. The metrics will be exposed via the prometheus endpoint (which is already working on ":9554/prometheus" but its just exposing generic information about the java runtime of the backend).
+When all this is finally done and working I will maybe implement my own frontend and my Server Manager as a single ready-to-use container on Docker Hub, which will make it very easy for interested users to install the application..
 
 This means that the foundation is almost done, the next step will be the integration of Docker. After that it shouldn't take too long until a first release.
 
