@@ -15,6 +15,7 @@ public class Instance {
     public String id;
 
     public String name;
+    private String version;
     public InstanceState state;
     public String container;
 

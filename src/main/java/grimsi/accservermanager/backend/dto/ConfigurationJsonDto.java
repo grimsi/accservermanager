@@ -15,8 +15,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ConfigurationJsonDto {
 
-    private String id;
-
     @NotNull(message = "udpPort is required.")
     @Min(value = 1024, message = "udpPort has to be between 1024 and 49151.")
     @Max(value = 49151, message = "udpPort has to be between 1024 and 49151.")

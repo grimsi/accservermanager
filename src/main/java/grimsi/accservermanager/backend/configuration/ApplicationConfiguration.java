@@ -18,7 +18,9 @@ public class ApplicationConfiguration {
     private long expirationTime;
     private String username;
     private String password;
-    private String serverPath;
+    private String folderPath;
+    private String serverExecutableName;
     private String containerNamePrefix;
+    private boolean containerNamePostfixEnabled;
     private String containerImage;
 }

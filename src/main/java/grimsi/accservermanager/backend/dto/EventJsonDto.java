@@ -18,8 +18,6 @@ import java.util.List;
 @NoArgsConstructor
 public class EventJsonDto {
 
-    private String id;
-
     @NotNull(message = "track is required.")
     @Valid
     private Track track;

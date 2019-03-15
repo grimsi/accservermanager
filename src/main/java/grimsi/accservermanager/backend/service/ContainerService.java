@@ -6,7 +6,6 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.InstanceDto;
-import grimsi.accservermanager.backend.dto.InstanceStatsDto;
 import grimsi.accservermanager.backend.enums.InstanceState;
 import grimsi.accservermanager.backend.exception.ContainerException;
 import org.slf4j.Logger;
@@ -14,14 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+//@Service
 public class ContainerService {
 
     private final DockerClient docker;
@@ -107,9 +105,5 @@ public class ContainerService {
             log.error(e.toString());
         }
         return null;
-    }
-
-    public InstanceStatsDto getInstanceStats() {
-        throw new NotImplementedException();
     }
 }

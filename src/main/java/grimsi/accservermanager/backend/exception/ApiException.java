@@ -1,10 +1,15 @@
 package grimsi.accservermanager.backend.exception;
 
-@javax.annotation.Generated(value = "grimsi.accservermanager.backend.codegen.v3.generators.java.SpringCodegen", date = "2019-03-10T17:37:16.729Z[GMT]")
+import org.springframework.http.HttpStatus;
+
 public class ApiException extends Exception{
-    private int code;
-    public ApiException (int code, String msg) {
+    private HttpStatus status;
+    public ApiException (HttpStatus status, String msg) {
         super(msg);
-        this.code = code;
+        this.status = status;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 }

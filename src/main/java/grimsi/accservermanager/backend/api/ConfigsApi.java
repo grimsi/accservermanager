@@ -1,6 +1,7 @@
 package grimsi.accservermanager.backend.api;
 
 import grimsi.accservermanager.backend.dto.ConfigDto;
+import grimsi.accservermanager.backend.exception.ApiException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
