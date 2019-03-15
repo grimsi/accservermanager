@@ -20,6 +20,7 @@ public class SettingsJsonDto {
 
     private String password;
 
+    @NotBlank(message = "adminPassword is required.")
     private String adminPassword;
 
     private int configVersion = 1;

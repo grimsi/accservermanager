@@ -18,4 +18,7 @@ public class ApplicationConfiguration {
     private long expirationTime;
     private String username;
     private String password;
+    private String serverPath;
+    private String containerNamePrefix;
+    private String containerImage;
 }

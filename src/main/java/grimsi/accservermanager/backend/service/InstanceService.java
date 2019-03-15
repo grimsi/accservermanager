@@ -18,6 +18,9 @@ public class InstanceService {
     JsonSchemaService jsonSchemaService;
 
     @Autowired
+    ConfigService configService;
+
+    @Autowired
     InstanceRepository instanceRepository;
 
     @Autowired
@@ -46,7 +49,11 @@ public class InstanceService {
     public InstanceDto create(InstanceDto instanceDto) {
         Instance instance = convertToEntity(instanceDto);
         instance = instanceRepository.save(instance);
-        return convertToDto(instance);
+
+        instanceDto = convertToDto(instance);
+        instanceDto.setConfig(configService.findById(instanceDto.getConfig().getId()));
+
+        return instanceDto;
     }
 
     public String getJsonSchema() {
