@@ -40,7 +40,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/info", "/prometheus").permitAll()
                 .anyRequest().authenticated()
                 .and().authorizeRequests()
-                .antMatchers("/v1/v2/api-docs", "/v1/swagger-resources/**", "/v1/swagger-ui.html", "/v1/webjars/**", "/v1/swagger.json").permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), configuration))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), configuration))

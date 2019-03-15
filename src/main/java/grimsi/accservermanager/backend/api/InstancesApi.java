@@ -41,6 +41,16 @@ public interface InstancesApi {
             method = RequestMethod.GET)
     ResponseEntity<Void> stopInstanceById(@PathVariable("instanceId") String instanceId);
 
+    @RequestMapping(value = "/instances/{instanceId}/pause",
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Void> pauseInstanceById(@PathVariable("instanceId") String instanceId);
+
+    @RequestMapping(value = "/instances/{instanceId}/resume",
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Void> resumeInstanceById(@PathVariable("instanceId") String instanceId);
+
     @RequestMapping(value = "/instances/{instanceId}",
             produces = {"application/json"},
             consumes = {"application/json"},

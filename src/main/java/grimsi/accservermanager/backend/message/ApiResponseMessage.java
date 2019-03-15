@@ -1,9 +1,5 @@
 package grimsi.accservermanager.backend.message;
 
-import javax.xml.bind.annotation.XmlTransient;
-
-@javax.annotation.Generated(value = "grimsi.accservermanager.backend.codegen.v3.generators.java.SpringCodegen", date = "2019-03-10T17:37:16.729Z[GMT]")
-@javax.xml.bind.annotation.XmlRootElement
 public class ApiResponseMessage {
     public static final int ERROR = 1;
     public static final int WARNING = 2;
@@ -42,7 +38,6 @@ public class ApiResponseMessage {
         this.message = message;
     }
 
-    @XmlTransient
     public int getCode() {
         return code;
     }

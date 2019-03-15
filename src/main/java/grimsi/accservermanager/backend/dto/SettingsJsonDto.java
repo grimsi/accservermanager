@@ -12,14 +12,12 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettingsJsonDto {
-
-    private String id;
-
     @NotBlank(message = "serverName is required.")
     private String serverName;
 
     private String password;
 
+    @NotBlank(message = "adminPassword is required.")
     private String adminPassword;
 
     private int configVersion = 1;

@@ -22,8 +22,8 @@ public class SessionDto {
     private int hourOfDay;
 
     @NotNull(message = "dayOfWeekend is required.")
-    @Min(value = 1, message = "dayOfWeekend has to be between 1 and 2.")
-    @Max(value = 2, message = "dayOfWeekend has to be between 1 and 2.")
+    @Min(value = 0, message = "dayOfWeekend has to be between 0 and 2.")
+    @Max(value = 2, message = "dayOfWeekend has to be between 0 and 2.")
     private int dayOfWeekend;
 
     @NotNull(message = "timeMultiplier is required.")

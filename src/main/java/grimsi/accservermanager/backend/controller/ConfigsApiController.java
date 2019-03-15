@@ -3,6 +3,7 @@ package grimsi.accservermanager.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import grimsi.accservermanager.backend.api.ConfigsApi;
 import grimsi.accservermanager.backend.dto.ConfigDto;
+import grimsi.accservermanager.backend.exception.ApiException;
 import grimsi.accservermanager.backend.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

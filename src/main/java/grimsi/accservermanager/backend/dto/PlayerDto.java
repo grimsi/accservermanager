@@ -5,15 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SystemInfoDto {
-    private String version;
-    private Boolean metricsEnabled;
-    private List<String> supportedAccVersions;
-    private int activeInstances;
+public class PlayerDto {
+    private String name;
+    private String steamID;
 }

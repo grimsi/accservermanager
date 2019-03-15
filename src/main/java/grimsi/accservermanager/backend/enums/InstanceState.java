@@ -1,5 +1,5 @@
 package grimsi.accservermanager.backend.enums;
 
 public enum InstanceState {
-    STOPPED, RUNNING, CRASHED, UNKNOWN
+    STOPPED, RUNNING, CRASHED, PAUSED, UNKNOWN
 }

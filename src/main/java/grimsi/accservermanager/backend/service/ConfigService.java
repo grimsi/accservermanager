@@ -2,6 +2,9 @@ package grimsi.accservermanager.backend.service;
 
 import grimsi.accservermanager.backend.dto.ConfigDto;
 import grimsi.accservermanager.backend.entity.Config;
+import grimsi.accservermanager.backend.entity.Instance;
+import grimsi.accservermanager.backend.exception.ApiException;
+import grimsi.accservermanager.backend.exception.ConfigInUseException;
 import grimsi.accservermanager.backend.exception.NotFoundException;
 import grimsi.accservermanager.backend.repository.ConfigRepository;
 import grimsi.accservermanager.backend.repository.ConfigurationJsonRepository;
@@ -10,6 +13,7 @@ import grimsi.accservermanager.backend.repository.SettingsJsonRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +39,9 @@ public class ConfigService {
     @Autowired
     ModelMapper mapper;
 
+    @Autowired
+    InstanceService instanceService;
+
     public List<ConfigDto> findAll() {
         List<Config> configs = configRepository.findAll();
         return mapper.map(configs, new TypeToken<List<ConfigDto>>() {
@@ -47,6 +54,9 @@ public class ConfigService {
     }
 
     public void deleteById(String id) {
+        if(instanceService.isConfigInUse(id)){
+            throw new ConfigInUseException(id);
+        }
         findById(id);
         configRepository.deleteById(id);
     }

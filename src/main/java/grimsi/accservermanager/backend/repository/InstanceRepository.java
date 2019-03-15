@@ -6,12 +6,15 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InstanceRepository extends MongoRepository<Instance, String> {
-    Instance findByName(String name);
+    Optional<List<Instance>> findAllByName(String name);
 
-    List<Instance> findByState(InstanceState state);
+    Optional<List<Instance>> findAllByConfig_Id(String configId);
 
-    Instance findByContainer(String containerName);
+    Optional<List<Instance>> findByState(InstanceState state);
+
+    Optional<Instance> findByContainer(String containerName);
 }
