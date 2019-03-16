@@ -1,12 +1,8 @@
 package grimsi.accservermanager.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import grimsi.accservermanager.backend.api.ConfigsApi;
 import grimsi.accservermanager.backend.dto.ConfigDto;
-import grimsi.accservermanager.backend.exception.ApiException;
 import grimsi.accservermanager.backend.service.ConfigService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +18,12 @@ import java.util.List;
 @Controller
 public class ConfigsApiController implements ConfigsApi {
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigsApiController.class);
-
-    private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
     private final ConfigService configService;
 
     @Autowired
-    public ConfigsApiController(ObjectMapper objectMapper,
-                                HttpServletRequest request,
+    public ConfigsApiController(HttpServletRequest request,
                                 ConfigService configService) {
-        this.objectMapper = objectMapper;
         this.request = request;
         this.configService = configService;
     }

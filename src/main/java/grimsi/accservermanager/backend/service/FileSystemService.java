@@ -6,16 +6,11 @@ import grimsi.accservermanager.backend.ACCServerManager;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.ConfigDto;
 import grimsi.accservermanager.backend.dto.InstanceDto;
-import grimsi.accservermanager.backend.exception.ApiException;
-import grimsi.accservermanager.backend.exception.CantStartInstanceException;
 import grimsi.accservermanager.backend.exception.CouldNotCreateFolderException;
 import grimsi.accservermanager.backend.exception.CouldNotDeleteFolderException;
-import jnr.ffi.annotations.IgnoreError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.GsonJsonParser;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

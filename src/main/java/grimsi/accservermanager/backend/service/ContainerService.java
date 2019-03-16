@@ -6,20 +6,23 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.InstanceDto;
-import grimsi.accservermanager.backend.enums.InstanceState;
-import grimsi.accservermanager.backend.exception.ContainerException;
+import grimsi.accservermanager.backend.enums.OperatingSystem;
+import grimsi.accservermanager.backend.exception.CouldNotCreateContainerException;
+import grimsi.accservermanager.backend.exception.CouldNotStartContainerException;
+import org.modelmapper.internal.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//@Service
+@Service
 public class ContainerService {
 
     private final DockerClient docker;
@@ -31,16 +34,29 @@ public class ContainerService {
     ApplicationConfiguration config;
     private Logger log = LoggerFactory.getLogger(ContainerService.class);
 
-    public ContainerService() {
-        docker = DefaultDockerClient.builder().build();
+    @Autowired
+    public ContainerService(UtilityService utilityService) {
+        switch (utilityService.getHostOS()){
+            case WINDOWS:
+                docker = new DefaultDockerClient("http://localhost:2375");
+                break;
+            case UNIX:
+                docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+                break;
+            case MAC:
+                docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+                break;
+            default:
+                docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+                break;
+        }
     }
 
     public void deployInstance(InstanceDto instance) {
 
         String[] ports = {
                 String.valueOf(instance.getConfig().getConfigurationJson().getTcpPort()),
-                String.valueOf(instance.getConfig().getConfigurationJson().getUdpPort()),
-                env.getProperty("management.server.port", String.class)};
+                String.valueOf(instance.getConfig().getConfigurationJson().getUdpPort())};
 
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
         for (String port : ports) {
@@ -49,20 +65,28 @@ public class ContainerService {
 
         HostConfig hostConfig = HostConfig.builder().portBindings(portBindings).build();
 
-        ContainerConfig containerConfig = ContainerConfig.builder()
-                .image(config.getContainerImage())
+       try{
+           docker.pull(config.getContainerImage());
+       } catch (DockerException | InterruptedException e){
+           throw new CouldNotCreateContainerException(e.getMessage());
+       }
+
+        final ContainerConfig containerConfig = ContainerConfig.builder()
                 .hostConfig(hostConfig)
+                .image(config.getContainerImage())
                 .exposedPorts(ports)
+                .cmd("sh", "-c", "while :; do sleep 1; done")
                 .build();
 
         try {
-            ContainerCreation container = docker.createContainer(containerConfig, instance.getName());
+            String containerName = buildContainerName(instance);
+            ContainerCreation container = docker.createContainer(containerConfig, containerName);
 
             instance.setContainer(container.id());
-            instanceService.updateById(instance.getId(), instance);
+            instanceService.save(instance);
 
         } catch (DockerException | InterruptedException e) {
-            log.error(e.toString());
+            throw new CouldNotCreateContainerException(e.getMessage());
         }
     }
 
@@ -70,7 +94,7 @@ public class ContainerService {
         try {
             docker.startContainer(instance.getContainer());
         } catch (DockerException | InterruptedException e) {
-            log.error(e.toString());
+            throw new CouldNotStartContainerException(instance.getContainer(), e.getMessage());
         }
     }
 
@@ -90,12 +114,8 @@ public class ContainerService {
         }
     }
 
-    public void resumeInstance(InstanceDto instance) throws ContainerException {
-        if (instance.getState() != InstanceState.PAUSED) {
-            throw new ContainerException("Only paused instances can be resumed");
-        } else {
-            startInstance(instance);
-        }
+    public void resumeInstance(InstanceDto instance) {
+
     }
 
     public ContainerStats getContainerStats(InstanceDto instance) {
@@ -105,5 +125,22 @@ public class ContainerService {
             log.error(e.toString());
         }
         return null;
+    }
+
+    public String buildContainerName(InstanceDto instance){
+        String name = "";
+
+        /* Prefix */
+        name = name.concat(config.getContainerNamePrefix()).concat("_");
+
+        /* main part */
+        name = name.concat(instance.getName());
+
+        /* Postfix */
+        if(config.isContainerNamePostfixEnabled()){
+            name = name.concat("_").concat(instance.getVersion());
+        }
+
+        return name;
     }
 }

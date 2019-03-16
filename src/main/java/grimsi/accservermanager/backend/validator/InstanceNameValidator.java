@@ -17,6 +17,6 @@ public class InstanceNameValidator implements ConstraintValidator<UniqueInstance
     @Override
     public boolean isValid(String name, ConstraintValidatorContext cxt) {
         List<InstanceDto> instances = instanceService.findByName(name);
-        return instances.stream().noneMatch(instance -> instance.getName().equals(name));
+        return instances.stream().noneMatch(instance -> instance.getName().toLowerCase().equals(name.toLowerCase()));
     }
 }

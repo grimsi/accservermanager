@@ -3,7 +3,7 @@ package grimsi.accservermanager.backend.service;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.entity.Instance;
 import grimsi.accservermanager.backend.enums.InstanceState;
-import grimsi.accservermanager.backend.exception.CantStartInstanceException;
+import grimsi.accservermanager.backend.exception.CouldNotStartInstanceException;
 import grimsi.accservermanager.backend.exception.InstanceNotStoppedException;
 import grimsi.accservermanager.backend.exception.NotFoundException;
 import grimsi.accservermanager.backend.repository.InstanceRepository;
@@ -26,6 +26,9 @@ public class InstanceService {
 
     @Autowired
     FileSystemService fileSystemService;
+
+    @Autowired
+    ContainerService containerService;
 
     @Autowired
     InstanceRepository instanceRepository;
@@ -52,7 +55,7 @@ public class InstanceService {
     public void deleteById(String id) {
         InstanceDto instance = findById(id);
 
-        if(instance.getState() != InstanceState.STOPPED || instance.getState() != InstanceState.CRASHED){
+        if(instance.getState() != InstanceState.STOPPED && instance.getState() != InstanceState.CRASHED){
             throw new InstanceNotStoppedException(instance.getId(), instance.getState());
         }
 
@@ -76,12 +79,13 @@ public class InstanceService {
 
         try{
             fileSystemService.createInstanceFolder(instanceDto);
+            containerService.deployInstance(instanceDto);
         } catch (Exception e){
             deleteById(instanceDto.getId());
             throw e;
         }
 
-        return instanceDto;
+        return save(instanceDto);
     }
 
     public InstanceDto save(InstanceDto instanceDto){
@@ -96,11 +100,10 @@ public class InstanceService {
         InstanceDto instanceDto = findById(instanceId);
 
         if(instanceDto.getState() == InstanceState.RUNNING || instanceDto.getState() == InstanceState.PAUSED){
-            throw new CantStartInstanceException(instanceId, instanceDto.getState());
+            throw new CouldNotStartInstanceException(instanceId, instanceDto.getState());
         }
 
-
-
+        containerService.startInstance(instanceDto);
         instanceDto.setState(InstanceState.RUNNING);
 
         save(instanceDto);
