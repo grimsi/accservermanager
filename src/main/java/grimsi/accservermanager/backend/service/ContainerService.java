@@ -6,21 +6,19 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.InstanceDto;
-import grimsi.accservermanager.backend.enums.OperatingSystem;
-import grimsi.accservermanager.backend.exception.CouldNotCreateContainerException;
-import grimsi.accservermanager.backend.exception.CouldNotStartContainerException;
-import org.modelmapper.internal.bytebuddy.asm.Advice;
+import grimsi.accservermanager.backend.entity.Instance;
+import grimsi.accservermanager.backend.exception.ContainerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ContainerService {
@@ -28,6 +26,8 @@ public class ContainerService {
     private final DockerClient docker;
     @Autowired
     InstanceService instanceService;
+    @Autowired
+    FileSystemService fileSystemService;
     @Autowired
     Environment env;
     @Autowired
@@ -55,27 +55,38 @@ public class ContainerService {
     public void deployInstance(InstanceDto instance) {
 
         String[] ports = {
-                String.valueOf(instance.getConfig().getConfigurationJson().getTcpPort()),
-                String.valueOf(instance.getConfig().getConfigurationJson().getUdpPort())};
+                (instance.getConfig().getConfigurationJson().getTcpPort() + "/tcp"),
+                (instance.getConfig().getConfigurationJson().getUdpPort() + "/udp")
+        };
 
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
         for (String port : ports) {
             portBindings.put(port, Collections.singletonList(PortBinding.of("0.0.0.0", port)));
         }
 
-        HostConfig hostConfig = HostConfig.builder().portBindings(portBindings).build();
+        HostConfig hostConfig = HostConfig.builder()
+                .portBindings(portBindings)
+                .binds(fileSystemService.getInstanceFolderPath(instance) + ":/opt/server")
+                .build();
 
-       try{
-           docker.pull(config.getContainerImage());
-       } catch (DockerException | InterruptedException e){
-           throw new CouldNotCreateContainerException(e.getMessage());
-       }
+        try{
+            List<Image> images = docker.listImages().stream().filter(
+                    image -> image.repoTags().stream()
+                            .anyMatch(tag -> tag.equals(config.getContainerImage())
+                            )
+            ).collect(Collectors.toList());
+
+            if(images.isEmpty()){
+                docker.pull(config.getContainerImage());
+            }
+        } catch (DockerException | InterruptedException e){
+            throw new ContainerException("Could not find/pull image '" + config.getContainerImage() + "': " + e.getMessage());
+        }
 
         final ContainerConfig containerConfig = ContainerConfig.builder()
                 .hostConfig(hostConfig)
                 .image(config.getContainerImage())
                 .exposedPorts(ports)
-                .cmd("sh", "-c", "while :; do sleep 1; done")
                 .build();
 
         try {
@@ -86,7 +97,7 @@ public class ContainerService {
             instanceService.save(instance);
 
         } catch (DockerException | InterruptedException e) {
-            throw new CouldNotCreateContainerException(e.getMessage());
+            throw new ContainerException("Could not create container for instance '" + instance.getId() + "': " + e.getMessage());
         }
     }
 
@@ -94,7 +105,7 @@ public class ContainerService {
         try {
             docker.startContainer(instance.getContainer());
         } catch (DockerException | InterruptedException e) {
-            throw new CouldNotStartContainerException(instance.getContainer(), e.getMessage());
+            throw new ContainerException("Could not start container '" + instance.getContainer() +"': " + e.getMessage());
         }
     }
 
@@ -102,7 +113,7 @@ public class ContainerService {
         try {
             docker.stopContainer(instance.getContainer(), 10);
         } catch (DockerException | InterruptedException e) {
-            log.error(e.toString());
+            throw new ContainerException("Could not stop container '" + instance.getContainer() +"': " + e.getMessage());
         }
     }
 
@@ -110,13 +121,27 @@ public class ContainerService {
         try {
             docker.pauseContainer(instance.getContainer());
         } catch (DockerException | InterruptedException e) {
-            log.error(e.toString());
+            throw new ContainerException("Could not pause container '" + instance.getContainer() +"': " + e.getMessage());
         }
     }
 
     public void resumeInstance(InstanceDto instance) {
-
+        try {
+            docker.unpauseContainer(instance.getContainer());
+        } catch (DockerException | InterruptedException e){
+            throw new ContainerException("Could not resume container '" + instance.getContainer() +"': " + e.getMessage());
+        }
     }
+
+    public void deleteInstance(InstanceDto instance){
+        try {
+            stopInstance(instance);
+            docker.removeContainer(instance.getContainer());
+        } catch (DockerException | InterruptedException e){
+            throw new ContainerException("Could not delete container '" + instance.getContainer() +"': " + e.getMessage());
+        }
+    }
+
 
     public ContainerStats getContainerStats(InstanceDto instance) {
         try {
@@ -127,18 +152,13 @@ public class ContainerService {
         return null;
     }
 
-    public String buildContainerName(InstanceDto instance){
-        String name = "";
-
-        /* Prefix */
-        name = name.concat(config.getContainerNamePrefix()).concat("_");
-
+    private String buildContainerName(InstanceDto instance){
         /* main part */
-        name = name.concat(instance.getName());
+        String name = instance.getName();
 
         /* Postfix */
         if(config.isContainerNamePostfixEnabled()){
-            name = name.concat("_").concat(instance.getVersion());
+            name = name.concat("-v").concat(instance.getVersion());
         }
 
         return name;

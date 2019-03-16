@@ -14,7 +14,7 @@ public interface InstanceRepository extends MongoRepository<Instance, String> {
 
     Optional<List<Instance>> findAllByConfig_Id(String configId);
 
-    Optional<List<Instance>> findByState(InstanceState state);
+    Optional<List<Instance>> findAllByState(InstanceState state);
 
     Optional<Instance> findByContainer(String containerName);
 }

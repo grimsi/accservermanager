@@ -44,6 +44,14 @@ public class FileSystemService {
     private final String EVENT_JSON = "event.json";
     private final String SETTINGS_JSON = "settings.json";
 
+    public void initFileSystem(){
+        File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
+        /* create 'instances' folder */
+        if(!instanceRootFolder.exists()){
+            instanceRootFolder.mkdirs();
+        }
+    }
+
     public List<String> getInstalledServerVersions(){
         File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
 
@@ -60,15 +68,13 @@ public class FileSystemService {
         return Collections.emptyList();
     }
 
+    public String getInstanceFolderPath(InstanceDto instance){
+        return config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName();
+    }
+
     public void createInstanceFolder(InstanceDto instance){
         File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
         File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
-
-        if(!instanceRootFolder.exists()){
-            log.info("Creating folder '" + instanceRootFolder.getAbsolutePath() + "'.");
-            instanceRootFolder.mkdirs();
-        }
-
         File instanceFolder = new File(instanceRootFolder.getAbsolutePath() + File.separator + instance.getName());
 
         try {
@@ -86,13 +92,17 @@ public class FileSystemService {
 
     public void deleteInstanceFolder(InstanceDto instance){
         File folderToDelete = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName());
+        deleteFolder(folderToDelete);
+    }
+
+    private void deleteFolder(File folder){
         try{
-            Files.walk(folderToDelete.toPath())
+            Files.walk(folder.toPath())
                     .map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
                     .forEach(File::delete);
         } catch (IOException e){
-            throw new CouldNotDeleteFolderException(folderToDelete.toPath());
+            throw new CouldNotDeleteFolderException(folder.toPath());
         }
     }
 

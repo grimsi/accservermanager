@@ -20,7 +20,6 @@ public class ApplicationConfiguration {
     private String password;
     private String folderPath;
     private String serverExecutableName;
-    private String containerNamePrefix;
     private boolean containerNamePostfixEnabled;
     private String containerImage;
 }

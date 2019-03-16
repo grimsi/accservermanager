@@ -2,7 +2,10 @@ package grimsi.accservermanager.backend;
 
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.UserDto;
+import grimsi.accservermanager.backend.repository.ConfigRepository;
+import grimsi.accservermanager.backend.repository.InstanceRepository;
 import grimsi.accservermanager.backend.repository.UserRepository;
+import grimsi.accservermanager.backend.service.FileSystemService;
 import grimsi.accservermanager.backend.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -23,6 +26,8 @@ public class ACCServerManager implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private FileSystemService fileSystemService;
+    @Autowired
     private ApplicationConfiguration config;
     @Autowired
     private UserService userService;
@@ -36,6 +41,9 @@ public class ACCServerManager implements CommandLineRunner {
         if (arg0.length > 0 && arg0[0].equals("exitcode")) {
             throw new ExitException();
         }
+
+        fileSystemService.initFileSystem();
+        log.info("Initialized filesystem.");
 
         userRepository.deleteAll();
         userService.registerUser(new UserDto(config.getUsername(), config.getPassword()));

@@ -20,7 +20,8 @@ public class InfoService {
     public SystemInfoDto getSystemInfo(){
         SystemInfoDto systemInfo = new SystemInfoDto();
 
-        systemInfo.setVersion("0.0.2");
+        // TODO: get maven build-info plugin to work so this can be dynamically loaded
+        systemInfo.setVersion("0.1.0");
         systemInfo.setSupportedAccVersions(fileSystemService.getInstalledServerVersions());
         systemInfo.setMetricsEnabled(this.areMetricsEnabled());
         systemInfo.setActiveInstances(instanceService.getActiveInstanceCount());

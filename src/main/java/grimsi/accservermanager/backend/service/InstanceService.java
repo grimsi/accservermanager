@@ -3,7 +3,8 @@ package grimsi.accservermanager.backend.service;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.entity.Instance;
 import grimsi.accservermanager.backend.enums.InstanceState;
-import grimsi.accservermanager.backend.exception.CouldNotStartInstanceException;
+import grimsi.accservermanager.backend.exception.ConflictException;
+import grimsi.accservermanager.backend.exception.IllegalInstanceStateException;
 import grimsi.accservermanager.backend.exception.InstanceNotStoppedException;
 import grimsi.accservermanager.backend.exception.NotFoundException;
 import grimsi.accservermanager.backend.repository.InstanceRepository;
@@ -60,6 +61,7 @@ public class InstanceService {
         }
 
         fileSystemService.deleteInstanceFolder(instance);
+        containerService.deleteInstance(instance);
         instanceRepository.deleteById(id);
     }
 
@@ -72,10 +74,16 @@ public class InstanceService {
 
         instance.state = InstanceState.STOPPED;
 
-        instance = instanceRepository.save(instance);
-
         instanceDto = convertToDto(instance);
         instanceDto.setConfig(configService.findById(instanceDto.getConfig().getId()));
+
+        if(arePortsInUse(instanceDto)){
+
+            int tcpPort = instanceDto.getConfig().getConfigurationJson().getTcpPort();
+            int udpPort = instanceDto.getConfig().getConfigurationJson().getUdpPort();
+
+            throw new ConflictException("Ports '" + tcpPort + "/tcp' and '" + udpPort + "/udp' are already in use by another instance.");
+        }
 
         try{
             fileSystemService.createInstanceFolder(instanceDto);
@@ -100,7 +108,7 @@ public class InstanceService {
         InstanceDto instanceDto = findById(instanceId);
 
         if(instanceDto.getState() == InstanceState.RUNNING || instanceDto.getState() == InstanceState.PAUSED){
-            throw new CouldNotStartInstanceException(instanceId, instanceDto.getState());
+            throw new IllegalInstanceStateException("start", instanceId, instanceDto.getState());
         }
 
         containerService.startInstance(instanceDto);
@@ -110,15 +118,67 @@ public class InstanceService {
     }
 
     public void stopInstance(String instanceId){
+        InstanceDto instanceDto = findById(instanceId);
 
+        if(instanceDto.getState() != InstanceState.RUNNING){
+            throw new IllegalInstanceStateException("stop", instanceId, instanceDto.getState());
+        }
+
+        containerService.stopInstance(instanceDto);
+        instanceDto.setState(InstanceState.STOPPED);
+
+        save(instanceDto);
+    }
+
+    public void pauseInstance(String instanceId){
+        InstanceDto instanceDto = findById(instanceId);
+
+        if(instanceDto.getState() != InstanceState.RUNNING){
+            throw new IllegalInstanceStateException("pause", instanceId, instanceDto.getState());
+        }
+
+        containerService.pauseInstance(instanceDto);
+        instanceDto.setState(InstanceState.PAUSED);
+
+        save(instanceDto);
+    }
+
+    public void resumeInstance(String instanceId){
+        InstanceDto instanceDto = findById(instanceId);
+
+        if(instanceDto.getState() != InstanceState.PAUSED){
+            throw new IllegalInstanceStateException("resume", instanceId, instanceDto.getState());
+        }
+
+        containerService.resumeInstance(instanceDto);
+        instanceDto.setState(InstanceState.PAUSED);
+
+        save(instanceDto);
     }
 
     public int getActiveInstanceCount(){
-        return instanceRepository.findByState(InstanceState.RUNNING).orElseThrow(NotFoundException::new).size();
+        return instanceRepository.findAllByState(InstanceState.RUNNING).orElseThrow(NotFoundException::new).size();
     }
 
     public boolean isConfigInUse(String configId){
         return !instanceRepository.findAllByConfig_Id(configId).get().isEmpty();
+    }
+
+    private boolean arePortsInUse(InstanceDto instanceDto){
+
+        int tcpPort = instanceDto.getConfig().getConfigurationJson().getTcpPort();
+        int udpPort = instanceDto.getConfig().getConfigurationJson().getUdpPort();
+
+        List<InstanceDto> instances = findAll();
+
+        if(instances.isEmpty()){
+            return false;
+        }
+
+        return instances.stream().anyMatch(i -> (
+                        i.getConfig().getConfigurationJson().getTcpPort() == tcpPort ||
+                        i.getConfig().getConfigurationJson().getUdpPort() == udpPort
+        ));
     }
 
     public String getJsonSchema() {

@@ -57,7 +57,12 @@ public class ConfigService {
         if(instanceService.isConfigInUse(id)){
             throw new ConfigInUseException(id);
         }
-        findById(id);
+
+        Config config = configRepository.findById(id).orElseThrow(NotFoundException::new);
+        eventJsonRepository.deleteById(config.eventJson.id);
+        settingsJsonRepository.deleteById(config.settingsJson.id);
+        configurationJsonRepository.deleteById(config.configurationJson.id);
+
         configRepository.deleteById(id);
     }
 

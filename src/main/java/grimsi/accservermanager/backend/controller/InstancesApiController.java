@@ -75,19 +75,22 @@ public class InstancesApiController implements InstancesApi {
     @Override
     public ResponseEntity<Void> stopInstanceById(@PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        instanceService.stopInstance(instanceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> pauseInstanceById(@PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        instanceService.pauseInstance(instanceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> resumeInstanceById(@PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        instanceService.resumeInstance(instanceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
