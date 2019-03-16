@@ -7,6 +7,7 @@ import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.ConfigDto;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.exception.ApiException;
+import grimsi.accservermanager.backend.exception.CantStartInstanceException;
 import grimsi.accservermanager.backend.exception.CouldNotCreateFolderException;
 import grimsi.accservermanager.backend.exception.CouldNotDeleteFolderException;
 import jnr.ffi.annotations.IgnoreError;

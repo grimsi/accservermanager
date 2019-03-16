@@ -68,7 +68,8 @@ public class InstancesApiController implements InstancesApi {
     @Override
     public ResponseEntity<Void> startInstanceById(@PathVariable("instanceId") String instanceId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        instanceService.startInstance(instanceId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

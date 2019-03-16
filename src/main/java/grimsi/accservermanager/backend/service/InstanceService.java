@@ -3,6 +3,8 @@ package grimsi.accservermanager.backend.service;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.entity.Instance;
 import grimsi.accservermanager.backend.enums.InstanceState;
+import grimsi.accservermanager.backend.exception.CantStartInstanceException;
+import grimsi.accservermanager.backend.exception.InstanceNotStoppedException;
 import grimsi.accservermanager.backend.exception.NotFoundException;
 import grimsi.accservermanager.backend.repository.InstanceRepository;
 import org.modelmapper.ModelMapper;
@@ -49,6 +51,11 @@ public class InstanceService {
 
     public void deleteById(String id) {
         InstanceDto instance = findById(id);
+
+        if(instance.getState() != InstanceState.STOPPED || instance.getState() != InstanceState.CRASHED){
+            throw new InstanceNotStoppedException(instance.getId(), instance.getState());
+        }
+
         fileSystemService.deleteInstanceFolder(instance);
         instanceRepository.deleteById(id);
     }
@@ -59,6 +66,9 @@ public class InstanceService {
 
     public InstanceDto create(InstanceDto instanceDto) {
         Instance instance = convertToEntity(instanceDto);
+
+        instance.state = InstanceState.STOPPED;
+
         instance = instanceRepository.save(instance);
 
         instanceDto = convertToDto(instance);
@@ -72,6 +82,32 @@ public class InstanceService {
         }
 
         return instanceDto;
+    }
+
+    public InstanceDto save(InstanceDto instanceDto){
+        Instance instance = convertToEntity(instanceDto);
+
+        instanceRepository.save(instance);
+
+        return convertToDto(instance);
+    }
+
+    public void startInstance(String instanceId){
+        InstanceDto instanceDto = findById(instanceId);
+
+        if(instanceDto.getState() == InstanceState.RUNNING || instanceDto.getState() == InstanceState.PAUSED){
+            throw new CantStartInstanceException(instanceId, instanceDto.getState());
+        }
+
+
+
+        instanceDto.setState(InstanceState.RUNNING);
+
+        save(instanceDto);
+    }
+
+    public void stopInstance(String instanceId){
+
     }
 
     public int getActiveInstanceCount(){

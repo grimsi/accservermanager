@@ -1,4 +1,4 @@
-package grimsi.accservermanager.backend.service;
+package grimsi.accservermanager.backend.dto;
 
 import grimsi.accservermanager.backend.dto.PlayerDto;
 import lombok.AllArgsConstructor;

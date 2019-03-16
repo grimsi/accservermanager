@@ -2,7 +2,6 @@ package grimsi.accservermanager.backend.dto;
 
 import grimsi.accservermanager.backend.enums.Car;
 import grimsi.accservermanager.backend.enums.Track;
-import grimsi.accservermanager.backend.service.LeaderboardRankDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
