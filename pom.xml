@@ -3,7 +3,7 @@
     <groupId>grimsi.accservermanager</groupId>
     <artifactId>backend</artifactId>
     <packaging>jar</packaging>
-    <name>swagger-spring</name>
+    <name>accservermanager-backend</name>
     <version>0.1.1</version>
     <properties>
         <java.version>1.8</java.version>
