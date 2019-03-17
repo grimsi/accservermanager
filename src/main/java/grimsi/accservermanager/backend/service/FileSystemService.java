@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import grimsi.accservermanager.backend.ACCServerManager;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
-import grimsi.accservermanager.backend.dto.ConfigDto;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.exception.CouldNotCreateFolderException;
 import grimsi.accservermanager.backend.exception.CouldNotDeleteFolderException;
@@ -85,7 +84,7 @@ public class FileSystemService {
 
             copyServerExecutable(serverRootFolder, instanceFolder, instance.getVersion());
             createLogFolder(instanceFolder);
-            createCfgFolder(instanceFolder, instance.getConfig());
+            createCfgFolder(instanceFolder, instance);
 
         } catch (IOException e) {
             throw new CouldNotCreateFolderException(instanceFolder.toPath());
@@ -141,21 +140,21 @@ public class FileSystemService {
         logErrorFolder.mkdirs();
     }
 
-    private void createCfgFolder(File instanceFolder, ConfigDto instanceConfig) throws IOException {
+    private void createCfgFolder(File instanceFolder, InstanceDto instance) throws IOException {
         File cfgFolder = new File(instanceFolder.getAbsolutePath() + File.separator + CFG_FOLDER);
         cfgFolder.mkdirs();
 
         File configurationJson = new File(cfgFolder.getAbsolutePath() + File.separator + CONFIGURATION_JSON);
         configurationJson.createNewFile();
-        writeFile(configurationJson, gson.toJson(instanceConfig.getConfigurationJson()));
+        writeFile(configurationJson, gson.toJson(instance.getConfiguration()));
 
         File settingsJson = new File(cfgFolder.getAbsolutePath() + File.separator + SETTINGS_JSON);
         settingsJson.createNewFile();
-        writeFile(settingsJson, gson.toJson(instanceConfig.getSettingsJson()));
+        writeFile(settingsJson, gson.toJson(instance.getSettings()));
 
         File eventJson = new File(cfgFolder.getAbsolutePath() + File.separator + EVENT_JSON);
         eventJson.createNewFile();
-        writeFile(eventJson, gson.toJson(instanceConfig.getEventJson()));
+        writeFile(eventJson, gson.toJson(instance.getEvent()));
     }
 
     private void writeFile(File file, String content) throws IOException {

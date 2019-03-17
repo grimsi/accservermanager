@@ -1,13 +1,7 @@
 package grimsi.accservermanager.backend;
 
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
-import grimsi.accservermanager.backend.dto.UserDto;
-import grimsi.accservermanager.backend.repository.ConfigRepository;
-import grimsi.accservermanager.backend.repository.InstanceRepository;
-import grimsi.accservermanager.backend.repository.UserRepository;
-import grimsi.accservermanager.backend.service.FileSystemService;
 import grimsi.accservermanager.backend.service.StartupService;
-import grimsi.accservermanager.backend.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

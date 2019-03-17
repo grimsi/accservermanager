@@ -15,10 +15,12 @@ public class Instance {
     public String id;
 
     public String name;
-    private String version;
     public InstanceState state;
     public String container;
-
+    public Configuration configuration;
+    public Settings settings;
     @DBRef
-    public Config config;
+    public Event event;
+    private String version;
+
 }

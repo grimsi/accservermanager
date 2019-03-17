@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfigurationJsonDto {
+public class ConfigurationDto {
 
     @NotNull(message = "udpPort is required.")
     @Min(value = 1024, message = "udpPort has to be between 1024 and 49151.")

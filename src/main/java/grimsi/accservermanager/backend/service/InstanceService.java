@@ -23,7 +23,7 @@ public class InstanceService {
     JsonSchemaService jsonSchemaService;
 
     @Autowired
-    ConfigService configService;
+    EventService eventService;
 
     @Autowired
     FileSystemService fileSystemService;
@@ -48,9 +48,9 @@ public class InstanceService {
         return convertToDto(instance);
     }
 
-    public List<InstanceDto> findByName(String name) {
-        List<Instance> instances = instanceRepository.findAllByName(name).orElseThrow(NotFoundException::new);
-        return convertToDto(instances);
+    public InstanceDto findByName(String name) {
+        Instance instance = instanceRepository.findByName(name).orElseThrow(NotFoundException::new);
+        return convertToDto(instance);
     }
 
     public void deleteById(String id) {
@@ -75,12 +75,12 @@ public class InstanceService {
         instance.state = InstanceState.STOPPED;
 
         instanceDto = convertToDto(instance);
-        instanceDto.setConfig(configService.findById(instanceDto.getConfig().getId()));
+        instanceDto.setEvent(eventService.findById(instanceDto.getEvent().getId()));
 
         if (arePortsInUse(instanceDto)) {
 
-            int tcpPort = instanceDto.getConfig().getConfigurationJson().getTcpPort();
-            int udpPort = instanceDto.getConfig().getConfigurationJson().getUdpPort();
+            int tcpPort = instanceDto.getConfiguration().getTcpPort();
+            int udpPort = instanceDto.getConfiguration().getUdpPort();
 
             throw new ConflictException("Ports '" + tcpPort + "/tcp' and '" + udpPort + "/udp' are already in use by another instance.");
         }
@@ -157,7 +157,7 @@ public class InstanceService {
         }
 
         containerService.resumeInstance(instanceDto);
-        instanceDto.setState(InstanceState.PAUSED);
+        instanceDto.setState(InstanceState.RUNNING);
 
         save(instanceDto);
     }
@@ -166,14 +166,14 @@ public class InstanceService {
         return instanceRepository.findAllByState(InstanceState.RUNNING).orElseThrow(NotFoundException::new).size();
     }
 
-    public boolean isConfigInUse(String configId) {
-        return !instanceRepository.findAllByConfig_Id(configId).get().isEmpty();
+    public boolean isEventInUse(String eventId) {
+        return !instanceRepository.findAllByEvent_Id(eventId).get().isEmpty();
     }
 
     private boolean arePortsInUse(InstanceDto instanceDto) {
 
-        int tcpPort = instanceDto.getConfig().getConfigurationJson().getTcpPort();
-        int udpPort = instanceDto.getConfig().getConfigurationJson().getUdpPort();
+        int tcpPort = instanceDto.getConfiguration().getTcpPort();
+        int udpPort = instanceDto.getConfiguration().getUdpPort();
 
         List<InstanceDto> instances = findAll();
 
@@ -182,8 +182,7 @@ public class InstanceService {
         }
 
         return instances.parallelStream().anyMatch(i -> (
-                i.getConfig().getConfigurationJson().getTcpPort() == tcpPort ||
-                        i.getConfig().getConfigurationJson().getUdpPort() == udpPort
+                i.getConfiguration().getTcpPort() == tcpPort || i.getConfiguration().getUdpPort() == udpPort
         ));
     }
 

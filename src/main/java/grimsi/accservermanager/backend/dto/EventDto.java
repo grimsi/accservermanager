@@ -1,5 +1,6 @@
 package grimsi.accservermanager.backend.dto;
 
+import grimsi.accservermanager.backend.annotation.UniqueEventName;
 import grimsi.accservermanager.backend.enums.EventType;
 import grimsi.accservermanager.backend.enums.Track;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,14 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventJsonDto {
+public class EventDto {
+
+    private String id;
+
+    @NotBlank(message = "name is required.")
+    @Pattern(regexp = "[a-zA-Z0-9_-]*", message = "invalid name. Allowed characters: a-z, A-Z, 0-9, '_', '-'")
+    @UniqueEventName
+    private String name;
 
     @NotNull(message = "track is required.")
     @Valid

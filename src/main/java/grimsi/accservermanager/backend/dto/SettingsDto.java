@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SettingsJsonDto {
+public class SettingsDto {
     @NotBlank(message = "serverName is required.")
     private String serverName;
 

@@ -62,8 +62,8 @@ public class ContainerService {
     public void deployInstance(InstanceDto instance) {
 
         String[] ports = {
-                (instance.getConfig().getConfigurationJson().getTcpPort() + "/tcp"),
-                (instance.getConfig().getConfigurationJson().getUdpPort() + "/udp")
+                (instance.getConfiguration().getTcpPort() + "/tcp"),
+                (instance.getConfiguration().getUdpPort() + "/udp")
         };
 
         Map<String, List<PortBinding>> portBindings = new HashMap<>();
@@ -154,15 +154,10 @@ public class ContainerService {
     }
 
     public boolean instanceHasContainer(InstanceDto instance) {
-        try {
-            return docker.listContainers().parallelStream().allMatch(
-                    container -> (
-                            container.id().equals(instance.getContainer())
-                    )
-            );
-        } catch (DockerException | InterruptedException e) {
-            throw new ContainerException("Could not get list of containers.");
-        }
+        List<Container> containers = getAllContainers();
+        return containers.parallelStream().anyMatch(
+                container -> (container.id().equals(instance.getContainer())
+                )) && !containers.isEmpty();
     }
 
     public boolean isContainerNameInUse(InstanceDto instanceDto) {

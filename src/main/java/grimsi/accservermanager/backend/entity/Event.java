@@ -13,9 +13,11 @@ import java.util.List;
 @Document("event")
 @Getter
 @Setter
-public class EventJson {
+public class Event {
     @Id
     public String id;
+
+    public String name;
 
     public Track track;
     public EventType eventType;

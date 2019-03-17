@@ -2,13 +2,14 @@ package grimsi.accservermanager.backend.dto;
 
 import grimsi.accservermanager.backend.annotation.UniqueInstanceName;
 import grimsi.accservermanager.backend.annotation.ValidAccVersion;
-import grimsi.accservermanager.backend.annotation.ValidConfigId;
+import grimsi.accservermanager.backend.annotation.ValidEventId;
 import grimsi.accservermanager.backend.enums.InstanceState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -34,7 +35,15 @@ public class InstanceDto {
 
     private String container;
 
-    @NotNull(message = "config is required.")
-    @ValidConfigId
-    private ConfigDto config;
+    @NotNull(message = "configuration is required.")
+    @Valid
+    private ConfigurationDto configuration;
+
+    @NotNull(message = "settings is required.")
+    @Valid
+    private SettingsDto settings;
+
+    @NotNull(message = "event is required.")
+    @ValidEventId
+    private EventDto event;
 }

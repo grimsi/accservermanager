@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface InstanceRepository extends MongoRepository<Instance, String> {
-    Optional<List<Instance>> findAllByName(String name);
+    Optional<Instance> findByName(String name);
 
-    Optional<List<Instance>> findAllByConfig_Id(String configId);
+    Optional<List<Instance>> findAllByEvent_Id(String eventId);
 
     Optional<List<Instance>> findAllByState(InstanceState state);
 
-    Optional<Instance> findByContainer(String containerName);
+    Optional<Instance> findByContainer(String containerId);
 }
