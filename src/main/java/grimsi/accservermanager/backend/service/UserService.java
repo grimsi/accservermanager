@@ -35,7 +35,6 @@ public class UserService implements UserDetailsService {
         return false;
     }
 
-
     public boolean authenticate(UserDto userDto) {
         return authenticate(userDto.getUsername(), userDto.getPassword());
     }
@@ -45,5 +44,9 @@ public class UserService implements UserDetailsService {
         user.username = userDto.getUsername();
         user.password = passwordEncoder.encode(userDto.getPassword());
         return userRepository.save(user);
+    }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
     }
 }

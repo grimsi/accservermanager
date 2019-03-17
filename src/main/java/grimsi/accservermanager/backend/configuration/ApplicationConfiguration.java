@@ -22,4 +22,5 @@ public class ApplicationConfiguration {
     private String serverExecutableName;
     private boolean containerNamePostfixEnabled;
     private String containerImage;
+    private boolean deleteUnassignedContainersEnabled;
 }

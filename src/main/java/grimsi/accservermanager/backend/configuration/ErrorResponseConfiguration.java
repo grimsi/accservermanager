@@ -25,7 +25,7 @@ public class ErrorResponseConfiguration extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 
-        Map<String, Set<String>> errorsMap = fieldErrors.stream().collect(
+        Map<String, Set<String>> errorsMap = fieldErrors.parallelStream().collect(
                 Collectors.groupingBy(FieldError::getField,
                         Collectors.mapping(FieldError::getDefaultMessage, Collectors.toSet())
                 )

@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,13 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class FileSystemService {
 
-    @Autowired
-    ApplicationConfiguration config;
-
-    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
     private final Logger log = LoggerFactory.getLogger(ACCServerManager.class);
-
     private final String SERVERS_FOLDER = "servers";
     private final String INSTANCES_FOLDER = "instances";
     private final String LOG_FOLDER = "log";
@@ -43,39 +38,46 @@ public class FileSystemService {
     private final String CONFIGURATION_JSON = "configuration.json";
     private final String EVENT_JSON = "event.json";
     private final String SETTINGS_JSON = "settings.json";
+    @Autowired
+    ApplicationConfiguration config;
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public void initFileSystem(){
+    public void initFileSystem() {
         File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
         /* create 'instances' folder */
-        if(!instanceRootFolder.exists()){
+        if (!instanceRootFolder.exists()) {
             instanceRootFolder.mkdirs();
         }
     }
 
-    public List<String> getInstalledServerVersions(){
+    public List<String> getInstalledServerVersions() {
         File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
 
-        if(!serverRootFolder.exists()){
+        if (!serverRootFolder.exists()) {
             log.error(serverRootFolder.getAbsolutePath() + " could not be found.");
             return Collections.emptyList();
         }
 
         File[] subDirectories = serverRootFolder.listFiles(File::isDirectory);
-        if(subDirectories != null){
+        if (subDirectories != null) {
             return Arrays.stream(subDirectories).map(File::getName).collect(Collectors.toList());
         }
 
         return Collections.emptyList();
     }
 
-    public String getInstanceFolderPath(InstanceDto instance){
+    public String getInstanceFolderPath(InstanceDto instance) {
         return config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName();
     }
 
-    public void createInstanceFolder(InstanceDto instance){
+    public void createInstanceFolder(InstanceDto instance) {
         File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
         File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
         File instanceFolder = new File(instanceRootFolder.getAbsolutePath() + File.separator + instance.getName());
+
+        if (instanceFolder.exists()) {
+            instanceFolder.delete();
+        }
 
         try {
             log.info("Creating folder '" + instanceFolder.getAbsolutePath() + "'.");
@@ -85,23 +87,42 @@ public class FileSystemService {
             createLogFolder(instanceFolder);
             createCfgFolder(instanceFolder, instance.getConfig());
 
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new CouldNotCreateFolderException(instanceFolder.toPath());
         }
     }
 
-    public void deleteInstanceFolder(InstanceDto instance){
+    public void deleteInstanceFolder(InstanceDto instance) {
         File folderToDelete = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName());
         deleteFolder(folderToDelete);
     }
 
-    private void deleteFolder(File folder){
-        try{
+    public boolean instanceHasValidFolder(InstanceDto instanceDto) {
+        String instanceRootFolderPath = getInstanceFolderPath(instanceDto);
+        String instanceCfgFolderPath = instanceRootFolderPath + File.separator + CFG_FOLDER;
+        String instanceLogFolderPath = instanceRootFolderPath + File.separator + LOG_FOLDER;
+
+        List<File> filesToCheck = new ArrayList<>();
+
+        filesToCheck.add(new File(instanceRootFolderPath));
+        filesToCheck.add(new File(instanceCfgFolderPath));
+        filesToCheck.add(new File(instanceCfgFolderPath + File.separator + SETTINGS_JSON));
+        filesToCheck.add(new File(instanceCfgFolderPath + File.separator + EVENT_JSON));
+        filesToCheck.add(new File(instanceCfgFolderPath + File.separator + CONFIGURATION_JSON));
+        filesToCheck.add(new File(instanceLogFolderPath));
+        filesToCheck.add(new File(instanceLogFolderPath + File.separator + LOG_ERROR_FOLDER));
+
+        /* check if any of these files/folders do not exist */
+        return filesToCheck.parallelStream().allMatch(File::exists);
+    }
+
+    private void deleteFolder(File folder) {
+        try {
             Files.walk(folder.toPath())
                     .map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
                     .forEach(File::delete);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new CouldNotDeleteFolderException(folder.toPath());
         }
     }

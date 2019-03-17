@@ -6,7 +6,6 @@ import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.InstanceDto;
-import grimsi.accservermanager.backend.entity.Instance;
 import grimsi.accservermanager.backend.exception.ContainerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class ContainerService {
 
     @Autowired
     public ContainerService(UtilityService utilityService) {
-        switch (utilityService.getHostOS()){
+        switch (utilityService.getHostOS()) {
             case WINDOWS:
                 docker = new DefaultDockerClient("http://localhost:2375");
                 break;
@@ -49,6 +48,14 @@ public class ContainerService {
             default:
                 docker = new DefaultDockerClient("unix:///var/run/docker.sock");
                 break;
+        }
+    }
+
+    public List<Container> getAllContainers() {
+        try {
+            return docker.listContainers(DockerClient.ListContainersParam.allContainers());
+        } catch (DockerException | InterruptedException e) {
+            throw new ContainerException("Could not get a list of containers: " + e.getMessage());
         }
     }
 
@@ -69,21 +76,21 @@ public class ContainerService {
                 .binds(fileSystemService.getInstanceFolderPath(instance) + ":/opt/server")
                 .build();
 
-        try{
-            List<Image> images = docker.listImages().stream().filter(
-                    image -> image.repoTags().stream()
+        try {
+            List<Image> images = docker.listImages().parallelStream().filter(
+                    image -> image.repoTags().parallelStream()
                             .anyMatch(tag -> tag.equals(config.getContainerImage())
                             )
             ).collect(Collectors.toList());
 
-            if(images.isEmpty()){
+            if (images.isEmpty()) {
                 docker.pull(config.getContainerImage());
             }
-        } catch (DockerException | InterruptedException e){
+        } catch (DockerException | InterruptedException e) {
             throw new ContainerException("Could not find/pull image '" + config.getContainerImage() + "': " + e.getMessage());
         }
 
-        final ContainerConfig containerConfig = ContainerConfig.builder()
+        ContainerConfig containerConfig = ContainerConfig.builder()
                 .hostConfig(hostConfig)
                 .image(config.getContainerImage())
                 .exposedPorts(ports)
@@ -105,15 +112,15 @@ public class ContainerService {
         try {
             docker.startContainer(instance.getContainer());
         } catch (DockerException | InterruptedException e) {
-            throw new ContainerException("Could not start container '" + instance.getContainer() +"': " + e.getMessage());
+            throw new ContainerException("Could not start container '" + instance.getContainer() + "': " + e.getMessage());
         }
     }
 
     public void stopInstance(InstanceDto instance) {
         try {
-            docker.stopContainer(instance.getContainer(), 10);
+            docker.stopContainer(instance.getContainer(), 0);
         } catch (DockerException | InterruptedException e) {
-            throw new ContainerException("Could not stop container '" + instance.getContainer() +"': " + e.getMessage());
+            throw new ContainerException("Could not stop container '" + instance.getContainer() + "': " + e.getMessage());
         }
     }
 
@@ -121,27 +128,51 @@ public class ContainerService {
         try {
             docker.pauseContainer(instance.getContainer());
         } catch (DockerException | InterruptedException e) {
-            throw new ContainerException("Could not pause container '" + instance.getContainer() +"': " + e.getMessage());
+            throw new ContainerException("Could not pause container '" + instance.getContainer() + "': " + e.getMessage());
         }
     }
 
     public void resumeInstance(InstanceDto instance) {
         try {
             docker.unpauseContainer(instance.getContainer());
-        } catch (DockerException | InterruptedException e){
-            throw new ContainerException("Could not resume container '" + instance.getContainer() +"': " + e.getMessage());
+        } catch (DockerException | InterruptedException e) {
+            throw new ContainerException("Could not resume container '" + instance.getContainer() + "': " + e.getMessage());
         }
     }
 
-    public void deleteInstance(InstanceDto instance){
+    public void deleteInstance(InstanceDto instance) {
+        deleteContainer(instance.getContainer());
+    }
+
+    public void deleteContainer(String id) {
         try {
-            stopInstance(instance);
-            docker.removeContainer(instance.getContainer());
-        } catch (DockerException | InterruptedException e){
-            throw new ContainerException("Could not delete container '" + instance.getContainer() +"': " + e.getMessage());
+            docker.stopContainer(id, 0);
+            docker.removeContainer(id);
+        } catch (DockerException | InterruptedException | NullPointerException e) {
+            throw new ContainerException("Cant delete container '" + id + "': " + e.getMessage());
         }
     }
 
+    public boolean instanceHasContainer(InstanceDto instance) {
+        try {
+            return docker.listContainers().parallelStream().allMatch(
+                    container -> (
+                            container.id().equals(instance.getContainer())
+                    )
+            );
+        } catch (DockerException | InterruptedException e) {
+            throw new ContainerException("Could not get list of containers.");
+        }
+    }
+
+    public boolean isContainerNameInUse(InstanceDto instanceDto) {
+        String containerName = buildContainerName(instanceDto);
+
+        /* Check if any active container has this name */
+        return getAllContainers().parallelStream().anyMatch(
+                container -> container.names().get(0).substring(1).equals(containerName)
+        );
+    }
 
     public ContainerStats getContainerStats(InstanceDto instance) {
         try {
@@ -152,12 +183,12 @@ public class ContainerService {
         return null;
     }
 
-    private String buildContainerName(InstanceDto instance){
+    public String buildContainerName(InstanceDto instance) {
         /* main part */
         String name = instance.getName();
 
         /* Postfix */
-        if(config.isContainerNamePostfixEnabled()){
+        if (config.isContainerNamePostfixEnabled()) {
             name = name.concat("-v").concat(instance.getVersion());
         }
 
