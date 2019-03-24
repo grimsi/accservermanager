@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-public interface EventApi {
+public interface EventsApi {
 
     @RequestMapping(value = "/events",
             produces = {"application/json"},

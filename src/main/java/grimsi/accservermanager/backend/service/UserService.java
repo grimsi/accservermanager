@@ -23,16 +23,13 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(s);
+        User user = userRepository.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException("User " + s + "could not be found."));
         return new UserPrincipal(user, new SimpleGrantedAuthority("admin"));
     }
 
-    public boolean authenticate(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            return passwordEncoder.matches(password, user.password);
-        }
-        return false;
+    public boolean authenticate(String username, String password) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + "could not be found."));
+        return passwordEncoder.matches(password, user.password);
     }
 
     public boolean authenticate(UserDto userDto) {

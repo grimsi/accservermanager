@@ -1,6 +1,6 @@
 package grimsi.accservermanager.backend.controller;
 
-import grimsi.accservermanager.backend.api.EventApi;
+import grimsi.accservermanager.backend.api.EventsApi;
 import grimsi.accservermanager.backend.dto.EventDto;
 import grimsi.accservermanager.backend.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +16,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-public class EventApiController implements EventApi {
+public class EventsApiController implements EventsApi {
 
     private final HttpServletRequest request;
     private final EventService eventService;
 
     @Autowired
-    public EventApiController(HttpServletRequest request,
-                              EventService eventService) {
+    public EventsApiController(HttpServletRequest request,
+                               EventService eventService) {
         this.request = request;
         this.eventService = eventService;
     }
