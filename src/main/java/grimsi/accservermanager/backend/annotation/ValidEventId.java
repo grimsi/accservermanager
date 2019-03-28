@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidEventId {
-    String message() default "configuration id is invalid.";
+    String message() default "event id is invalid.";
 
     Class<?>[] groups() default {};
 

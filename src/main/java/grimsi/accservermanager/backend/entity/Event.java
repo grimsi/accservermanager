@@ -5,6 +5,7 @@ import grimsi.accservermanager.backend.enums.Track;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ public class Event {
     @Id
     public String id;
 
+    @Indexed(unique = true)
     public String name;
 
     public Track track;

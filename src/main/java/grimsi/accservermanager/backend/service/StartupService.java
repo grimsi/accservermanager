@@ -61,7 +61,7 @@ public class StartupService {
         List<InstanceDto> instances = instanceService.findAll();
 
         /* Delete all instances that dont have a folder (maybe the user deleted the folder) */
-        instances.parallelStream().filter(
+        instances.stream().filter(
                 instance -> !fileSystemService.instanceHasValidFolder(instance)
         ).forEach(
                 instance -> {
@@ -85,7 +85,7 @@ public class StartupService {
         instances = instanceService.findAll();
 
         /* Check if every instance has a container and if not, create it (maybe the user deleted the container) */
-        instances.parallelStream().filter(
+        instances.stream().filter(
                 instance -> (!containerService.instanceHasContainer(instance))
         ).forEach(
                 instance -> {
@@ -104,10 +104,10 @@ public class StartupService {
         List<InstanceDto> instances = instanceService.findAll();
 
         /* Get a list of all containers that use the accServer container image but are not assigned to any instance */
-        List<Container> unassignedContainers = containerService.getAllContainers().parallelStream().filter(
+        List<Container> unassignedContainers = containerService.getAllContainers().stream().filter(
                 container -> (
                         instances.isEmpty() ||
-                                (instances.parallelStream().noneMatch(
+                                (instances.stream().noneMatch(
                                         instance -> (instance.getContainer().equals(container.id()))
                                 ) && container.image().equals(config.getContainerImage()))
                 )
@@ -115,7 +115,7 @@ public class StartupService {
 
         /* now delete all unassigned containers or just warn the user of unassigned containers depending on the configuraion */
         if (config.isDeleteUnassignedContainersEnabled() && !unassignedContainers.isEmpty()) {
-            unassignedContainers.parallelStream().forEach(
+            unassignedContainers.stream().forEach(
                     container -> {
                         containerService.deleteContainer(container.id());
                         log.warn("Could not find instance for container '" + container.id() + "', deleting container.\n" +

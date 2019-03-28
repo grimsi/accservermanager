@@ -77,8 +77,8 @@ public class ContainerService {
                 .build();
 
         try {
-            List<Image> images = docker.listImages().parallelStream().filter(
-                    image -> image.repoTags().parallelStream()
+            List<Image> images = docker.listImages().stream().filter(
+                    image -> image.repoTags().stream()
                             .anyMatch(tag -> tag.equals(config.getContainerImage())
                             )
             ).collect(Collectors.toList());
@@ -155,18 +155,9 @@ public class ContainerService {
 
     public boolean instanceHasContainer(InstanceDto instance) {
         List<Container> containers = getAllContainers();
-        return containers.parallelStream().anyMatch(
+        return containers.stream().anyMatch(
                 container -> (container.id().equals(instance.getContainer())
                 )) && !containers.isEmpty();
-    }
-
-    public boolean isContainerNameInUse(InstanceDto instanceDto) {
-        String containerName = buildContainerName(instanceDto);
-
-        /* Check if any active container has this name */
-        return getAllContainers().parallelStream().anyMatch(
-                container -> container.names().get(0).substring(1).equals(containerName)
-        );
     }
 
     public ContainerStats getContainerStats(InstanceDto instance) {

@@ -1,12 +1,12 @@
 package grimsi.accservermanager.backend.dto;
 
-import grimsi.accservermanager.backend.annotation.UniqueEventName;
 import grimsi.accservermanager.backend.enums.EventType;
 import grimsi.accservermanager.backend.enums.Track;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -20,37 +20,48 @@ import java.util.List;
 public class EventDto {
 
     private final int configVersion = 1;
+
+    @Id
     private String id;
+
     @NotBlank(message = "name is required.")
     @Pattern(regexp = "[a-zA-Z0-9_-]*", message = "invalid name. Allowed characters: a-z, A-Z, 0-9, '_', '-'")
-    @UniqueEventName
     private String name;
+
     @NotNull(message = "track is required.")
     @Valid
     private Track track;
+
     @NotNull(message = "eventType is required.")
     @Valid
     private EventType eventType;
+
     @NotNull(message = "preRaceWaitingTimeSeconds is required.")
     private int preRaceWaitingTimeSeconds;
+
     @NotNull(message = "sessionOverTimeSeconds is required.")
     private int sessionOverTimeSeconds;
+
     @NotNull(message = "ambientTemp is required.")
     @Min(value = -100, message = "ambientTemp has to be between -100 and 100.")
     @Max(value = 100, message = "ambientTemp has to be between -100 and 100.")
     private int ambientTemp;
+
     @NotNull(message = "trackTemp is required.")
     @Min(value = -100, message = "trackTemp has to be between -100 and 100.")
     @Max(value = 100, message = "trackTemp has to be between -100 and 100.")
     private int trackTemp;
+
     @NotNull(message = "cloudLevel is required.")
     @DecimalMin(value = "0", message = "cloudLevel has to be between 0 and 1.")
     @DecimalMax(value = "1", message = "cloudLevel has to be between 0 and 1.")
     private BigDecimal cloudLevel;
+
     @NotNull(message = "rain is required.")
     @DecimalMin(value = "0", message = "rain has to be between 0 and 1.")
     @DecimalMax(value = "1", message = "rain has to be between 0 and 1.")
     private BigDecimal rain;
+
     @NotNull(message = "sessions is required.")
     @Valid
     private List<SessionDto> sessions;

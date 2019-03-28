@@ -7,6 +7,7 @@ import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.exception.CouldNotCreateFolderException;
 import grimsi.accservermanager.backend.exception.CouldNotDeleteFolderException;
+import grimsi.accservermanager.backend.exception.CouldNotUpdateFolderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,25 @@ public class FileSystemService {
         deleteFolder(folderToDelete);
     }
 
+    public void updateInstanceFolder(InstanceDto instance) {
+        File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
+        File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
+        File instanceFolder = new File(instanceRootFolder.getAbsolutePath() + File.separator + instance.getName());
+        File configFolder = new File(instanceFolder.getAbsolutePath() + File.separator + CFG_FOLDER);
+        File serverExecutable = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName() + config.getServerExecutableName());
+
+        deleteFolder(configFolder);
+
+        serverExecutable.delete();
+
+        try {
+            copyServerExecutable(serverRootFolder, instanceFolder, instance.getVersion());
+            createCfgFolder(instanceFolder, instance);
+        } catch (IOException e) {
+            throw new CouldNotUpdateFolderException(instanceFolder.toPath());
+        }
+    }
+
     public boolean instanceHasValidFolder(InstanceDto instanceDto) {
         String instanceRootFolderPath = getInstanceFolderPath(instanceDto);
         String instanceCfgFolderPath = instanceRootFolderPath + File.separator + CFG_FOLDER;
@@ -112,7 +132,7 @@ public class FileSystemService {
         filesToCheck.add(new File(instanceLogFolderPath + File.separator + LOG_ERROR_FOLDER));
 
         /* check if any of these files/folders do not exist */
-        return filesToCheck.parallelStream().allMatch(File::exists);
+        return filesToCheck.stream().allMatch(File::exists);
     }
 
     private void deleteFolder(File folder) {

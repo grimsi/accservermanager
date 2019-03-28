@@ -11,6 +11,7 @@ import grimsi.accservermanager.backend.repository.InstanceRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +44,11 @@ public class InstanceService {
         }.getType());
     }
 
+    public List<InstanceDto> findInstancesByEventId(String eventId) {
+        List<Instance> matchingInstances = instanceRepository.findAllByEvent_Id(eventId).get();
+        return convertToDto(matchingInstances);
+    }
+
     public InstanceDto findById(String id) {
         Instance instance = instanceRepository.findById(id).orElseThrow(NotFoundException::new);
         return convertToDto(instance);
@@ -65,29 +71,32 @@ public class InstanceService {
         instanceRepository.deleteById(id);
     }
 
-    public InstanceDto updateById(String id, InstanceDto instanceDto) {
-        return create(instanceDto);
+    public InstanceDto updateById(String id, InstanceDto newInstanceDto) {
+        InstanceDto oldInstanceDto = findById(id);
+
+        newInstanceDto.setEvent(eventService.findById(newInstanceDto.getEvent().getId()));
+        newInstanceDto.setRestartRequired(true);
+
+        /* Set the values that the user is not allowed to change */
+        newInstanceDto.setId(id);
+        newInstanceDto.setState(oldInstanceDto.getState());
+        newInstanceDto.setContainer(oldInstanceDto.getContainer());
+
+        checkIfPortsAreInUse(newInstanceDto);
+
+        return save(newInstanceDto);
     }
 
     public InstanceDto create(InstanceDto instanceDto) {
         Instance instance = convertToEntity(instanceDto);
 
         instance.state = InstanceState.STOPPED;
+        instance.restartRequired = false;
 
         instanceDto = convertToDto(instance);
         instanceDto.setEvent(eventService.findById(instanceDto.getEvent().getId()));
 
-        if (arePortsInUse(instanceDto)) {
-
-            int tcpPort = instanceDto.getConfiguration().getTcpPort();
-            int udpPort = instanceDto.getConfiguration().getUdpPort();
-
-            throw new ConflictException("Ports '" + tcpPort + "/tcp' and '" + udpPort + "/udp' are already in use by another instance.");
-        }
-
-        if (containerService.isContainerNameInUse(instanceDto)) {
-            throw new ConflictException("A container with the name '" + containerService.buildContainerName(instanceDto) + "' already exists. Delete the container or choose another name.");
-        }
+        checkIfPortsAreInUse(instanceDto);
 
         instanceDto = save(instanceDto);
 
@@ -102,10 +111,15 @@ public class InstanceService {
         return save(instanceDto);
     }
 
+    @SuppressWarnings("Duplicates")
     public InstanceDto save(InstanceDto instanceDto) {
         Instance instance = convertToEntity(instanceDto);
 
-        instanceRepository.save(instance);
+        try {
+            instance = instanceRepository.save(instance);
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("Name '" + instance.name + "' is already in use.");
+        }
 
         return convertToDto(instance);
     }
@@ -113,8 +127,15 @@ public class InstanceService {
     public void startInstance(String instanceId) {
         InstanceDto instanceDto = findById(instanceId);
 
-        if (instanceDto.getState() == InstanceState.RUNNING || instanceDto.getState() == InstanceState.PAUSED) {
+        if (instanceDto.getState() == InstanceState.RUNNING) {
             throw new IllegalInstanceStateException("start", instanceId, instanceDto.getState());
+        }
+
+        if (instanceDto.isRestartRequired()) {
+            containerService.deleteContainer(instanceDto.getContainer());
+            fileSystemService.updateInstanceFolder(instanceDto);
+            containerService.deployInstance(instanceDto);
+            instanceDto.setRestartRequired(false);
         }
 
         containerService.startInstance(instanceDto);
@@ -167,23 +188,35 @@ public class InstanceService {
     }
 
     public boolean isEventInUse(String eventId) {
-        return !instanceRepository.findAllByEvent_Id(eventId).get().isEmpty();
+        return !findInstancesByEventId(eventId).isEmpty();
     }
 
-    private boolean arePortsInUse(InstanceDto instanceDto) {
+    private List<InstanceDto> getInstancesByPorts(int tcpPort, int udpPort) {
+        List<Instance> matchingInstances = instanceRepository.findAllByConfiguration_TcpPortOrConfiguration_UdpPort(tcpPort, udpPort).get();
+        return convertToDto(matchingInstances);
+    }
+
+    private void checkIfPortsAreInUse(InstanceDto instanceDto) {
 
         int tcpPort = instanceDto.getConfiguration().getTcpPort();
         int udpPort = instanceDto.getConfiguration().getUdpPort();
 
-        List<InstanceDto> instances = findAll();
+        List<InstanceDto> instancesWithSamePorts = getInstancesByPorts(tcpPort, udpPort);
 
-        if (instances.isEmpty()) {
-            return false;
+        if (instancesWithSamePorts.isEmpty()) {
+            return;
         }
 
-        return instances.parallelStream().anyMatch(i -> (
-                i.getConfiguration().getTcpPort() == tcpPort || i.getConfiguration().getUdpPort() == udpPort
-        ));
+        if (instanceDto.getId() == null) {
+            throw new ConflictException("At least one of the ports is already used by another instance.");
+        }
+
+        boolean arePortsInUse = instancesWithSamePorts.stream().noneMatch(i -> (i.getId().equals(instanceDto.getId())));
+
+        if (arePortsInUse) {
+            throw new ConflictException("At least one of the ports is already used by another instance.");
+        }
+
     }
 
     public String getJsonSchema() {
@@ -199,7 +232,7 @@ public class InstanceService {
     }
 
     private List<InstanceDto> convertToDto(List<Instance> instanceDtos) {
-        return instanceDtos.parallelStream().map(instance -> mapper.map(instance, InstanceDto.class)).collect(Collectors.toList());
+        return instanceDtos.stream().map(instance -> mapper.map(instance, InstanceDto.class)).collect(Collectors.toList());
     }
 
     private Instance convertToEntity(InstanceDto instanceDto) {
@@ -207,6 +240,6 @@ public class InstanceService {
     }
 
     private List<Instance> convertToEntity(List<Instance> instances) {
-        return instances.parallelStream().map(instanceDto -> mapper.map(instanceDto, Instance.class)).collect(Collectors.toList());
+        return instances.stream().map(instanceDto -> mapper.map(instanceDto, Instance.class)).collect(Collectors.toList());
     }
 }

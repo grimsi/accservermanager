@@ -12,10 +12,14 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettingsDto {
+
     private final int configVersion = 1;
+
     @NotBlank(message = "serverName is required.")
     private String serverName;
+
     private String password;
+
     @NotBlank(message = "adminPassword is required.")
     private String adminPassword;
 }

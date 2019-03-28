@@ -2,12 +2,14 @@ package grimsi.accservermanager.backend.service;
 
 import grimsi.accservermanager.backend.dto.EventDto;
 import grimsi.accservermanager.backend.entity.Event;
+import grimsi.accservermanager.backend.exception.ConflictException;
 import grimsi.accservermanager.backend.exception.EventInUseException;
 import grimsi.accservermanager.backend.exception.NotFoundException;
 import grimsi.accservermanager.backend.repository.EventRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,12 +56,34 @@ public class EventService {
     }
 
     public EventDto updateById(String id, EventDto eventDto) {
-        return create(eventDto);
+        findById(id);
+
+        /* Set the values that the user is not allowed to change */
+        eventDto.setId(id);
+
+        /* Set the restart required flag for all instances that use this event */
+        instanceService.findInstancesByEventId(id).forEach(i -> {
+            i.setRestartRequired(true);
+            instanceService.updateById(i.getId(), i);
+        });
+
+        return save(eventDto);
     }
 
     public EventDto create(EventDto eventDto) {
+        return save(eventDto);
+    }
+
+    @SuppressWarnings("Duplicates")
+    public EventDto save(EventDto eventDto) {
         Event event = convertToEntity(eventDto);
-        event = eventRepository.save(event);
+
+        try {
+            event = eventRepository.save(event);
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("Name '" + event.name + "' is already in use.");
+        }
+
         return convertToDto(event);
     }
 
