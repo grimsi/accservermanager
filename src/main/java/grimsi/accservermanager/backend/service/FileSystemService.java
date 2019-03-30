@@ -94,6 +94,9 @@ public class FileSystemService {
 
     public void deleteInstanceFolder(InstanceDto instance) {
         File folderToDelete = new File(getInstanceFolderPath(instance));
+
+        log.info("Deleting folder '" + folderToDelete.getAbsolutePath() + "'.");
+
         deleteFolder(folderToDelete);
     }
 
