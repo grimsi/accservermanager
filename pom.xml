@@ -68,6 +68,11 @@
             <artifactId>modelmapper</artifactId>
             <version>2.3.2</version>
         </dependency>
+        <!-- Spring Flux -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <!-- Spring Metrics -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

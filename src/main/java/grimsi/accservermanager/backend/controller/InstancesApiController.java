@@ -1,108 +1,85 @@
 package grimsi.accservermanager.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import grimsi.accservermanager.backend.api.InstancesApi;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.enums.InstanceState;
 import grimsi.accservermanager.backend.service.InstanceService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 public class InstancesApiController implements InstancesApi {
 
-    private static final Logger log = LoggerFactory.getLogger(InstancesApiController.class);
-
-    private final ObjectMapper objectMapper;
-    private final HttpServletRequest request;
-    private final InstanceService instanceService;
-
     @Autowired
-    public InstancesApiController(ObjectMapper objectMapper,
-                                  HttpServletRequest request,
-                                  InstanceService instanceService) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-        this.instanceService = instanceService;
-    }
+    private InstanceService instanceService;
 
     @Override
-    public ResponseEntity<InstanceDto> createInstance(@Valid @RequestBody InstanceDto body) {
-        String accept = request.getHeader("Accept");
-        InstanceDto instanceDto = instanceService.create(body);
-        return new ResponseEntity<>(instanceDto, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Void> deleteInstanceById(@PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
-        instanceService.deleteById(instanceId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @Override
-    public ResponseEntity<InstanceDto> getInstanceById(@PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
-        InstanceDto instanceDto = instanceService.findById(instanceId);
-        return new ResponseEntity<>(instanceDto, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<InstanceDto>> listInstances(@Valid @RequestParam(value = "name", required = false) String name, @Valid @RequestParam(value = "state", required = false) InstanceState state) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<List<InstanceDto>> getInstances(String name, InstanceState state) {
         List<InstanceDto> instanceDtos = instanceService.findAll();
-        return new ResponseEntity<>(instanceDtos, HttpStatus.OK);
+        return ResponseEntity.ok(instanceDtos);
     }
 
     @Override
-    public ResponseEntity<Void> startInstanceById(@PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
-        instanceService.startInstance(instanceId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<InstanceDto> getInstanceById(String instanceId) {
+        InstanceDto instanceDto = instanceService.findById(instanceId);
+        return ResponseEntity.ok(instanceDto);
     }
 
     @Override
-    public ResponseEntity<Void> stopInstanceById(@PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
-        instanceService.stopInstance(instanceId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<InstanceDto> createInstance(InstanceDto body) {
+        InstanceDto instanceDto = instanceService.create(body);
+        return ResponseEntity.ok(instanceDto);
     }
 
     @Override
-    public ResponseEntity<Void> pauseInstanceById(@PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
-        instanceService.pauseInstance(instanceId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Void> resumeInstanceById(@PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
-        instanceService.resumeInstance(instanceId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<InstanceDto> updateInstanceById(@Valid @RequestBody InstanceDto body, @PathVariable("instanceId") String instanceId) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<InstanceDto> updateInstanceById(InstanceDto body, String instanceId) {
         InstanceDto instanceDto = instanceService.updateById(instanceId, body);
-        return new ResponseEntity<>(instanceDto, HttpStatus.OK);
+        return ResponseEntity.ok(instanceDto);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteInstanceById(String instanceId) {
+        instanceService.deleteById(instanceId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> startInstanceById(String instanceId) {
+        instanceService.startInstance(instanceId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> stopInstanceById(String instanceId) {
+        instanceService.stopInstance(instanceId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> pauseInstanceById(String instanceId) {
+        instanceService.pauseInstance(instanceId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> resumeInstanceById(String instanceId) {
+        instanceService.resumeInstance(instanceId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public SseEmitter getInstanceStream() {
+        return instanceService.createNewEventEmitter();
+        //return instanceService.createNewEventEmitter();
     }
 
     @Override
     public ResponseEntity<String> getInstanceSchema() {
         String schema = instanceService.getJsonSchema();
-        return new ResponseEntity<>(schema, HttpStatus.OK);
+        return ResponseEntity.ok(schema);
     }
 }

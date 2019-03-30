@@ -1,5 +1,6 @@
 package grimsi.accservermanager.backend.service;
 
+import com.google.gson.Gson;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.entity.Instance;
 import grimsi.accservermanager.backend.enums.InstanceState;
@@ -13,7 +14,9 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,53 +41,20 @@ public class InstanceService {
     @Autowired
     ModelMapper mapper;
 
+    @Autowired
+    Gson gson;
+
+    private List<SseEmitter> sseEmitters = new ArrayList<>();
+
     public List<InstanceDto> findAll() {
         List<Instance> instances = instanceRepository.findAll();
         return mapper.map(instances, new TypeToken<List<InstanceDto>>() {
         }.getType());
     }
 
-    public List<InstanceDto> findInstancesByEventId(String eventId) {
-        List<Instance> matchingInstances = instanceRepository.findAllByEvent_Id(eventId).get();
-        return convertToDto(matchingInstances);
-    }
-
     public InstanceDto findById(String id) {
         Instance instance = instanceRepository.findById(id).orElseThrow(NotFoundException::new);
         return convertToDto(instance);
-    }
-
-    public InstanceDto findByName(String name) {
-        Instance instance = instanceRepository.findByName(name).orElseThrow(NotFoundException::new);
-        return convertToDto(instance);
-    }
-
-    public void deleteById(String id) {
-        InstanceDto instance = findById(id);
-
-        if (instance.getState() != InstanceState.STOPPED && instance.getState() != InstanceState.CRASHED) {
-            throw new InstanceNotStoppedException(instance.getId(), instance.getState());
-        }
-
-        fileSystemService.deleteInstanceFolder(instance);
-        containerService.deleteInstance(instance);
-        instanceRepository.deleteById(id);
-    }
-
-    public InstanceDto updateById(String id, InstanceDto newInstanceDto) {
-        InstanceDto oldInstanceDto = findById(id);
-
-        newInstanceDto.setEvent(eventService.findById(newInstanceDto.getEvent().getId()));
-        newInstanceDto.setRestartRequired(true);
-
-        /* Set the values that the user is not allowed to change */
-        newInstanceDto.setId(id);
-        newInstanceDto.setState(oldInstanceDto.getState());
-        newInstanceDto.setContainer(oldInstanceDto.getContainer());
-
-        checkIfPortsAreInUse(newInstanceDto);
-
-        return save(newInstanceDto);
     }
 
     public InstanceDto create(InstanceDto instanceDto) {
@@ -108,20 +78,41 @@ public class InstanceService {
             throw e;
         }
 
-        return save(instanceDto);
+        instanceDto = save(instanceDto);
+        emitNewEvent("create", gson.toJson(instanceDto));
+        return instanceDto;
     }
 
-    @SuppressWarnings("Duplicates")
-    public InstanceDto save(InstanceDto instanceDto) {
-        Instance instance = convertToEntity(instanceDto);
+    public InstanceDto updateById(String id, InstanceDto newInstanceDto) {
+        InstanceDto oldInstanceDto = findById(id);
 
-        try {
-            instance = instanceRepository.save(instance);
-        } catch (DuplicateKeyException e) {
-            throw new ConflictException("Name '" + instance.name + "' is already in use.");
+        newInstanceDto.setEvent(eventService.findById(newInstanceDto.getEvent().getId()));
+        newInstanceDto.setRestartRequired(true);
+
+        /* Set the values that the user is not allowed to change */
+        newInstanceDto.setId(id);
+        newInstanceDto.setState(oldInstanceDto.getState());
+        newInstanceDto.setContainer(oldInstanceDto.getContainer());
+
+        checkIfPortsAreInUse(newInstanceDto);
+
+        newInstanceDto = save(newInstanceDto);
+        emitNewEvent("update", gson.toJson(newInstanceDto));
+        return newInstanceDto;
+    }
+
+    public void deleteById(String id) {
+        InstanceDto instance = findById(id);
+
+        if (instance.getState() != InstanceState.STOPPED && instance.getState() != InstanceState.CRASHED) {
+            throw new InstanceNotStoppedException(instance.getId(), instance.getState());
         }
 
-        return convertToDto(instance);
+        fileSystemService.deleteInstanceFolder(instance);
+        containerService.deleteInstance(instance);
+        instanceRepository.deleteById(id);
+
+        emitNewEvent("delete", id);
     }
 
     public void startInstance(String instanceId) {
@@ -141,7 +132,9 @@ public class InstanceService {
         containerService.startInstance(instanceDto);
         instanceDto.setState(InstanceState.RUNNING);
 
-        save(instanceDto);
+        instanceDto = save(instanceDto);
+
+        emitNewEvent("start", instanceDto.getId());
     }
 
     public void stopInstance(String instanceId) {
@@ -154,7 +147,9 @@ public class InstanceService {
         containerService.stopInstance(instanceDto);
         instanceDto.setState(InstanceState.STOPPED);
 
-        save(instanceDto);
+        instanceDto = save(instanceDto);
+
+        emitNewEvent("stop", instanceDto.getId());
     }
 
     public void pauseInstance(String instanceId) {
@@ -167,7 +162,9 @@ public class InstanceService {
         containerService.pauseInstance(instanceDto);
         instanceDto.setState(InstanceState.PAUSED);
 
-        save(instanceDto);
+        instanceDto = save(instanceDto);
+
+        emitNewEvent("pause", instanceDto.getId());
     }
 
     public void resumeInstance(String instanceId) {
@@ -180,7 +177,66 @@ public class InstanceService {
         containerService.resumeInstance(instanceDto);
         instanceDto.setState(InstanceState.RUNNING);
 
-        save(instanceDto);
+        instanceDto = save(instanceDto);
+
+        emitNewEvent("resume", instanceDto.getId());
+    }
+
+    @SuppressWarnings("Duplicates")
+    public SseEmitter createNewEventEmitter() {
+        SseEmitter emitter = new SseEmitter();
+        sseEmitters.add(emitter);
+
+        emitter.onCompletion(() -> sseEmitters.remove(emitter));
+        emitter.onTimeout(() -> sseEmitters.remove(emitter));
+        emitter.onError((throwable) -> sseEmitters.remove(emitter));
+
+        return emitter;
+    }
+
+    @SuppressWarnings("Duplicates")
+    private void emitNewEvent(String name, String data) {
+        sseEmitters.forEach(sseEmitter -> {
+            try {
+                SseEmitter.SseEventBuilder event = SseEmitter.event()
+                        .data(data)
+                        .name(name);
+                sseEmitter.send(event);
+            } catch (Exception ex) {
+                sseEmitter.completeWithError(ex);
+            }
+        });
+    }
+
+    public String getJsonSchema() {
+        String schema = jsonSchemaService.getJsonSchema(InstanceDto.class);
+        if (schema == null) {
+            throw new NullPointerException("Error parsing JSON schema");
+        }
+        return schema;
+    }
+
+    @SuppressWarnings("Duplicates")
+    public InstanceDto save(InstanceDto instanceDto) {
+        Instance instance = convertToEntity(instanceDto);
+
+        try {
+            instance = instanceRepository.save(instance);
+        } catch (DuplicateKeyException e) {
+            throw new ConflictException("Name '" + instance.name + "' is already in use.");
+        }
+
+        return convertToDto(instance);
+    }
+
+    public List<InstanceDto> findInstancesByEventId(String eventId) {
+        List<Instance> matchingInstances = instanceRepository.findAllByEvent_Id(eventId).get();
+        return convertToDto(matchingInstances);
+    }
+
+    public InstanceDto findByName(String name) {
+        Instance instance = instanceRepository.findByName(name).orElseThrow(NotFoundException::new);
+        return convertToDto(instance);
     }
 
     public int getActiveInstanceCount() {
@@ -217,14 +273,6 @@ public class InstanceService {
             throw new ConflictException("At least one of the ports is already used by another instance.");
         }
 
-    }
-
-    public String getJsonSchema() {
-        String schema = jsonSchemaService.getJsonSchema(InstanceDto.class);
-        if (schema == null) {
-            throw new NullPointerException("Error parsing JSON schema");
-        }
-        return schema;
     }
 
     private InstanceDto convertToDto(Instance instance) {

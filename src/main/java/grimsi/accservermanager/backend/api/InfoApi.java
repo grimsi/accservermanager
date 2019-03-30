@@ -2,14 +2,13 @@ package grimsi.accservermanager.backend.api;
 
 import grimsi.accservermanager.backend.dto.SystemInfoDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
+@RequestMapping("/info")
 public interface InfoApi {
 
-    @RequestMapping(value = "/info",
-            produces = {"application/json"},
-            method = RequestMethod.GET)
+    @GetMapping(produces = {"application/json"})
     ResponseEntity<SystemInfoDto> getInfo();
 
 }

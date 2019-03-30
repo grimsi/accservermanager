@@ -1,5 +1,6 @@
 package grimsi.accservermanager.backend.service;
 
+import com.google.gson.Gson;
 import grimsi.accservermanager.backend.dto.EventDto;
 import grimsi.accservermanager.backend.entity.Event;
 import grimsi.accservermanager.backend.exception.ConflictException;
@@ -11,7 +12,9 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,10 +27,16 @@ public class EventService {
     EventRepository eventRepository;
 
     @Autowired
+    InstanceService instanceService;
+
+    @Autowired
     ModelMapper mapper;
 
     @Autowired
-    InstanceService instanceService;
+    Gson gson;
+
+
+    private List<SseEmitter> sseEmitters = new ArrayList<>();
 
     public List<EventDto> findAll() {
         List<Event> configs = eventRepository.findAll();
@@ -45,14 +54,10 @@ public class EventService {
         return convertToDto(event);
     }
 
-    public void deleteById(String id) {
-        if (instanceService.isEventInUse(id)) {
-            throw new EventInUseException(id);
-        }
-
-        findById(id);
-
-        eventRepository.deleteById(id);
+    public EventDto create(EventDto eventDto) {
+        eventDto = save(eventDto);
+        emitNewEvent("create", gson.toJson(eventDto));
+        return eventDto;
     }
 
     public EventDto updateById(String id, EventDto eventDto) {
@@ -67,11 +72,54 @@ public class EventService {
             instanceService.updateById(i.getId(), i);
         });
 
-        return save(eventDto);
+        eventDto = save(eventDto);
+        emitNewEvent("update", gson.toJson(eventDto));
+        return eventDto;
     }
 
-    public EventDto create(EventDto eventDto) {
-        return save(eventDto);
+    public void deleteById(String id) {
+        findById(id);
+
+        if (instanceService.isEventInUse(id)) {
+            throw new EventInUseException(id);
+        }
+
+        eventRepository.deleteById(id);
+        emitNewEvent("delete", id);
+    }
+
+    @SuppressWarnings("Duplicates")
+    public SseEmitter createNewEventEmitter() {
+        SseEmitter emitter = new SseEmitter();
+        sseEmitters.add(emitter);
+
+        emitter.onCompletion(() -> sseEmitters.remove(emitter));
+        emitter.onTimeout(() -> sseEmitters.remove(emitter));
+        emitter.onError((throwable) -> sseEmitters.remove(emitter));
+
+        return emitter;
+    }
+
+    @SuppressWarnings("Duplicates")
+    private void emitNewEvent(String name, String data) {
+        sseEmitters.forEach(sseEmitter -> {
+            try {
+                SseEmitter.SseEventBuilder event = SseEmitter.event()
+                        .data(data)
+                        .name(name);
+                sseEmitter.send(event);
+            } catch (Exception ex) {
+                sseEmitter.completeWithError(ex);
+            }
+        });
+    }
+
+    public String getJsonSchema() {
+        String schema = jsonSchemaService.getJsonSchema(EventDto.class);
+        if (schema == null) {
+            throw new NullPointerException("Error parsing JSON schema");
+        }
+        return schema;
     }
 
     @SuppressWarnings("Duplicates")
@@ -85,14 +133,6 @@ public class EventService {
         }
 
         return convertToDto(event);
-    }
-
-    public String getJsonSchema() {
-        String schema = jsonSchemaService.getJsonSchema(EventDto.class);
-        if (schema == null) {
-            throw new NullPointerException("Error parsing JSON schema");
-        }
-        return schema;
     }
 
     private EventDto convertToDto(Event event) {
