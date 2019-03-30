@@ -67,13 +67,13 @@ public class FileSystemService {
     }
 
     public String getInstanceFolderPath(InstanceDto instance) {
-        return config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName();
+        return config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getId();
     }
 
+    @SuppressWarnings("Duplicates")
     public void createInstanceFolder(InstanceDto instance) {
-        File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
         File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
-        File instanceFolder = new File(instanceRootFolder.getAbsolutePath() + File.separator + instance.getName());
+        File instanceFolder = new File(getInstanceFolderPath(instance));
 
         if (instanceFolder.exists()) {
             instanceFolder.delete();
@@ -93,16 +93,16 @@ public class FileSystemService {
     }
 
     public void deleteInstanceFolder(InstanceDto instance) {
-        File folderToDelete = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName());
+        File folderToDelete = new File(getInstanceFolderPath(instance));
         deleteFolder(folderToDelete);
     }
 
+    @SuppressWarnings("Duplicates")
     public void updateInstanceFolder(InstanceDto instance) {
-        File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
         File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
-        File instanceFolder = new File(instanceRootFolder.getAbsolutePath() + File.separator + instance.getName());
+        File instanceFolder = new File(getInstanceFolderPath(instance));
         File configFolder = new File(instanceFolder.getAbsolutePath() + File.separator + CFG_FOLDER);
-        File serverExecutable = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getName() + config.getServerExecutableName());
+        File serverExecutable = new File(getInstanceFolderPath(instance) + config.getServerExecutableName());
 
         deleteFolder(configFolder);
 
