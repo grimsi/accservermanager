@@ -43,6 +43,13 @@ public class FileSystemService {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public void initFileSystem() {
+
+        File applicationFolder = new File(config.getFolderPath());
+
+        if (!applicationFolder.exists()) {
+            log.error("The application folder could not be found.\nAre you sure that you set the correct path in the 'application.properties' file?");
+        }
+
         File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
         /* create 'instances' folder */
         if (!instanceRootFolder.exists()) {
