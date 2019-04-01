@@ -74,7 +74,6 @@ public class InstancesApiController implements InstancesApi {
     @Override
     public SseEmitter getInstanceStream() {
         return instanceService.createNewEventEmitter();
-        //return instanceService.createNewEventEmitter();
     }
 
     @Override

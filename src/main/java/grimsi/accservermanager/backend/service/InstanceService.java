@@ -127,6 +127,7 @@ public class InstanceService {
             fileSystemService.updateInstanceFolder(instanceDto);
             containerService.deployInstance(instanceDto);
             instanceDto.setRestartRequired(false);
+            emitNewEvent("update", gson.toJson(instanceDto));
         }
 
         containerService.startInstance(instanceDto);
@@ -140,7 +141,7 @@ public class InstanceService {
     public void stopInstance(String instanceId) {
         InstanceDto instanceDto = findById(instanceId);
 
-        if (instanceDto.getState() != InstanceState.RUNNING) {
+        if (instanceDto.getState() == InstanceState.STOPPED) {
             throw new IllegalInstanceStateException("stop", instanceId, instanceDto.getState());
         }
 
