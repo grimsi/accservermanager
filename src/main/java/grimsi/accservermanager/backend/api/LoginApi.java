@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
-@RequestMapping("/login")
+@RequestMapping("/v1/login")
 public interface LoginApi {
 
     @PostMapping(produces = {"application/json"}, consumes = {"application/json"})

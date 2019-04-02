@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping("/instances")
+@RequestMapping("/v1/instances")
 public interface InstancesApi {
 
     @GetMapping(produces = {"application/json"})

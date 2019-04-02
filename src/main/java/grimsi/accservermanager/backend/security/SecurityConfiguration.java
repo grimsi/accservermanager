@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
@@ -25,15 +25,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private ApplicationConfiguration configuration;
+
     private UserService userService;
 
     public SecurityConfiguration(UserService userService) {
         this.userService = userService;
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -45,14 +41,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "v1/login").permitAll()
-                .and().authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/info", "/prometheus").permitAll()
-                .anyRequest().authenticated()
-                .and().authorizeRequests()
-                .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), configuration))
+
+        http.cors().and().csrf().disable();
+
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/v1/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/info", "/prometheus").permitAll()
+                .antMatchers("/v1/**").authenticated();
+
+        http.authorizeRequests().and()
+                .addFilter(getJWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), configuration))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -62,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Bean
@@ -70,6 +68,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
+    }
+
+    private JWTAuthenticationFilter getJWTAuthenticationFilter(AuthenticationManager authManager) {
+        JWTAuthenticationFilter filter = new JWTAuthenticationFilter(authManager, configuration);
+        filter.setFilterProcessesUrl("/v1/login");
+        return filter;
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequestMapping(value = "/events")
+@RequestMapping(value = "/v1/events")
 public interface EventsApi {
 
     @GetMapping(produces = {"application/json"})
