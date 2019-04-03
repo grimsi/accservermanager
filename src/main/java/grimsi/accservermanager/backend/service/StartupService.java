@@ -35,6 +35,9 @@ public class StartupService {
 
     public void initialize() {
 
+        initUsers();
+        log.info("Created user with username '" + config.getUsername() + "' and user-defined password.");
+
         initFileSystem();
         log.info("Initialized filesystem.");
 
@@ -43,9 +46,6 @@ public class StartupService {
 
         initContainers();
         log.info("Initialized containers.");
-
-        initUsers();
-        log.info("Created user with username '" + config.getUsername() + "' and user-defined password.");
     }
 
     private void initFileSystem() {

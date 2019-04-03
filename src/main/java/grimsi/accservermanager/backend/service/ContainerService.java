@@ -2,6 +2,7 @@ package grimsi.accservermanager.backend.service;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.exceptions.DockerCertificateException;
 import com.spotify.docker.client.exceptions.DockerException;
 import com.spotify.docker.client.messages.*;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 @Service
 public class ContainerService {
 
-    private final DockerClient docker;
     @Autowired
     InstanceService instanceService;
     @Autowired
@@ -31,23 +31,29 @@ public class ContainerService {
     Environment env;
     @Autowired
     ApplicationConfiguration config;
+    private DockerClient docker;
     private Logger log = LoggerFactory.getLogger(ContainerService.class);
 
     @Autowired
     public ContainerService(UtilityService utilityService) {
-        switch (utilityService.getHostOS()) {
-            case WINDOWS:
-                docker = new DefaultDockerClient("http://localhost:2375");
-                break;
-            case UNIX:
-                docker = new DefaultDockerClient("unix:///var/run/docker.sock");
-                break;
-            case MAC:
-                docker = new DefaultDockerClient("unix:///var/run/docker.sock");
-                break;
-            default:
-                docker = new DefaultDockerClient("unix:///var/run/docker.sock");
-                break;
+        docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+        try {
+            switch (utilityService.getHostOS()) {
+                case WINDOWS:
+                    docker = new DefaultDockerClient("http://localhost:2375");
+                    break;
+                case UNIX:
+                    docker = DefaultDockerClient.fromEnv().build();
+                    break;
+                case MAC:
+                    docker = DefaultDockerClient.fromEnv().build();
+                    break;
+                default:
+                    docker = DefaultDockerClient.fromEnv().build();
+                    break;
+            }
+        } catch (DockerCertificateException e) {
+            log.error(e.getMessage());
         }
     }
 
