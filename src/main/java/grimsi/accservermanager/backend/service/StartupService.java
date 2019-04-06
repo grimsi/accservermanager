@@ -106,10 +106,12 @@ public class StartupService {
         /* Get a list of all containers that use the accServer container image but are not assigned to any instance */
         List<Container> unassignedContainers = containerService.getAllContainers().stream().filter(
                 container -> (
-                        instances.isEmpty() ||
-                                (instances.stream().noneMatch(
-                                        instance -> (instance.getContainer().equals(container.id()))
-                                ) && container.image().equals(config.getContainerImage()))
+                        container.image().equals(config.getContainerImage()) &&
+                                (instances.isEmpty() ||
+                                        instances.stream().noneMatch(
+                                                instance -> instance.getContainer().equals(container.id())
+                                        )
+                                )
                 )
         ).collect(Collectors.toList());
 
