@@ -27,4 +27,4 @@ You can also manage your servers (start/stop/pause/edit/delete/create) and monit
 I will try to implement new features such as the ability to view results and server logs.
 
 ## License
-This source code will be licensed under the ["Dont Be a Dick" Public License](https://dbad-license.org/).
+This source code will be licensed under the ["Dont Be a Dick" Public License](https://github.com/grimsi/accservermanager/blob/master/LICENSE).
