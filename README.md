@@ -3,7 +3,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager-backend&metric=ncloc)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager-backend) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager-backend&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager-backend) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager-backend&metric=bugs)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager-backend) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager-backend&metric=coverage)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager-backend)
 
 ## Introduction
-This is the backend component of my WIP AC Competizione Server Manager.
+This is the backend & frontend component of my WIP AC Competizione Server Manager.
 The server manager consists of a Java Spring based backend and a Angular 7 based frontend.
 
 ## Goal of this project
