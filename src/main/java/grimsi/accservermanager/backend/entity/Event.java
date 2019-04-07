@@ -29,6 +29,7 @@ public class Event {
     public int trackTemp;
     public BigDecimal cloudLevel;
     public BigDecimal rain;
+    public BigDecimal weatherRandomness;
     public List<Session> sessions;
     public int configVersion = 1;
 }

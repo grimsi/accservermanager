@@ -34,24 +34,9 @@ public class ContainerService {
     private DockerClient docker;
     private Logger log = LoggerFactory.getLogger(ContainerService.class);
 
-    @Autowired
-    public ContainerService(UtilityService utilityService) {
-        docker = new DefaultDockerClient("unix:///var/run/docker.sock");
+    public ContainerService() {
         try {
-            switch (utilityService.getHostOS()) {
-                case WINDOWS:
-                    docker = new DefaultDockerClient("http://localhost:2375");
-                    break;
-                case UNIX:
-                    docker = DefaultDockerClient.fromEnv().build();
-                    break;
-                case MAC:
-                    docker = DefaultDockerClient.fromEnv().build();
-                    break;
-                default:
-                    docker = DefaultDockerClient.fromEnv().build();
-                    break;
-            }
+            docker = DefaultDockerClient.fromEnv().build();
         } catch (DockerCertificateException e) {
             log.error(e.getMessage());
         }
@@ -80,6 +65,7 @@ public class ContainerService {
         HostConfig hostConfig = HostConfig.builder()
                 .portBindings(portBindings)
                 .binds(fileSystemService.getInstanceFolderPath(instance) + ":/opt/server")
+                .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
                 .build();
 
         try {

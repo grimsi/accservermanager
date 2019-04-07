@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -22,4 +25,14 @@ public class SettingsDto {
 
     @NotBlank(message = "adminPassword is required.")
     private String adminPassword;
+
+    @NotNull(message = "trackMedalsRequirement is required.")
+    @Min(value = 0, message = "trackMedalsRequirement has to be between 0 and 3.")
+    @Max(value = 3, message = "trackMedalsRequirement has to be between 0 and 3.")
+    private int trackMedalsRequirement;
+
+    @NotNull(message = "safetyRatingRequirement is required.")
+    @Min(value = -1, message = "safetyRatingRequirement has to be between -1 and 99.")
+    @Max(value = 99, message = "safetyRatingRequirement has to be between -1 and 99.")
+    private int safetyRatingRequirement;
 }

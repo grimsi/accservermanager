@@ -62,6 +62,11 @@ public class EventDto {
     @DecimalMax(value = "1", message = "rain has to be between 0 and 1.")
     private BigDecimal rain;
 
+    @NotNull(message = "weatherRandomness is required.")
+    @DecimalMin(value = "0", message = "weatherRandomness has to be between 0 and 10.")
+    @DecimalMax(value = "10", message = "weatherRandomness has to be between 0 and 10.")
+    private BigDecimal weatherRandomness;
+
     @NotNull(message = "sessions is required.")
     @Valid
     private List<SessionDto> sessions;
