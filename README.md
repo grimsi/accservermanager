@@ -6,6 +6,8 @@
 This is the backend & frontend component of my WIP AC Competizione Server Manager.
 The server manager consists of a Java Spring based backend and a Angular 7 based frontend.
 
+For instructions on how to install this server manager, please head over to the [wiki](https://github.com/grimsi/accservermanager/wiki).
+
 ## Goal of this project
 This project aims to provide a robust and reliable management interface to manage a great number of gameserver instances for AC Competizione.
 The main goal for me is to learn how to work with a lot of different cutting edge technologies, so don't expect too much from my source code since most of the stuff I will work with is pretty new to me.
