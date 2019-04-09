@@ -3,7 +3,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=alert_status)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=security_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=bugs)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager)
 
 ## Introduction
-This is the backend & frontend component of my WIP AC Competizione Server Manager.
+This is the backend & frontend component of my AC Competizione Server Manager.
 The server manager consists of a Java Spring based backend and a Angular 7 based frontend.
 
 For instructions on how to install this server manager, please head over to the [wiki](https://github.com/grimsi/accservermanager/wiki).
