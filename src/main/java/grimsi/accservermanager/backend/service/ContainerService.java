@@ -1,5 +1,6 @@
 package grimsi.accservermanager.backend.service;
 
+import com.google.gson.Gson;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
@@ -31,6 +32,8 @@ public class ContainerService {
     Environment env;
     @Autowired
     ApplicationConfiguration config;
+    @Autowired
+    Gson gson;
     private DockerClient docker;
     private Logger log = LoggerFactory.getLogger(ContainerService.class);
 
@@ -62,12 +65,6 @@ public class ContainerService {
             portBindings.put(port, Collections.singletonList(PortBinding.of("0.0.0.0", port)));
         }
 
-        HostConfig hostConfig = HostConfig.builder()
-                .portBindings(portBindings)
-                .binds(fileSystemService.getInstanceFolderPath(instance) + ":/opt/server")
-                .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
-                .build();
-
         try {
             List<Image> images = docker.listImages().stream().filter(
                     image -> image.repoTags().stream()
@@ -82,6 +79,14 @@ public class ContainerService {
             throw new ContainerException("Could not find/pull image '" + config.getContainerImage() + "': " + e.getMessage());
         }
 
+        log.info("Mounting dir: '" + fileSystemService.getInstanceFolderPath(instance, true) + ":" + config.getFolderPathContainerized() + "'.");
+
+        HostConfig hostConfig = HostConfig.builder()
+                .portBindings(portBindings)
+                .binds(fileSystemService.getInstanceFolderPath(instance, true) + ":" + config.getFolderPathContainerized())
+                .restartPolicy(HostConfig.RestartPolicy.unlessStopped())
+                .build();
+
         ContainerConfig containerConfig = ContainerConfig.builder()
                 .hostConfig(hostConfig)
                 .image(config.getContainerImage())
@@ -90,6 +95,7 @@ public class ContainerService {
 
         try {
             String containerName = buildContainerName(instance);
+            log.info("Container config: \n\n" + gson.toJson(containerConfig) + "\n\n");
             ContainerCreation container = docker.createContainer(containerConfig, containerName);
 
             instance.setContainer(container.id());
@@ -142,6 +148,14 @@ public class ContainerService {
             docker.removeContainer(id);
         } catch (DockerException | InterruptedException | NullPointerException e) {
             throw new ContainerException("Cant delete container '" + id + "': " + e.getMessage());
+        }
+    }
+
+    public void pullImage(String imageName) {
+        try {
+            docker.pull(imageName);
+        } catch (DockerException | InterruptedException e) {
+            throw new ContainerException("Cant pull image '" + imageName + "': " + e.getMessage());
         }
     }
 

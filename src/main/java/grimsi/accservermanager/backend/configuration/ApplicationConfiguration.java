@@ -21,6 +21,8 @@ public class ApplicationConfiguration {
     private String folderPath;
     private String serverExecutableName;
     private boolean containerNamePostfixEnabled;
+    private boolean containerized;
     private String containerImage;
+    private String folderPathContainerized;
     private boolean deleteUnassignedContainersEnabled;
 }

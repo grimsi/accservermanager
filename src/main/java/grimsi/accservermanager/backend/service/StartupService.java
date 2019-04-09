@@ -58,6 +58,11 @@ public class StartupService {
     }
 
     private void initInstances() {
+
+        /* Pull the latest image version */
+        log.info("Pulling latest container images. This may take a while.");
+        containerService.pullImage(config.getContainerImage());
+
         List<InstanceDto> instances = instanceService.findAll();
 
         /* Delete all instances that dont have a folder (maybe the user deleted the folder) */
@@ -101,6 +106,7 @@ public class StartupService {
     }
 
     private void initContainers() {
+
         List<InstanceDto> instances = instanceService.findAll();
 
         /* Get a list of all containers that use the accServer container image but are not assigned to any instance */

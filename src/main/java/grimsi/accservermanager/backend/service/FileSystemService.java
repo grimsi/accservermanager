@@ -44,13 +44,13 @@ public class FileSystemService {
 
     public void initFileSystem() {
 
-        File applicationFolder = new File(config.getFolderPath());
+        File applicationFolder = new File(getRootFolderPath(false));
 
         if (!applicationFolder.exists()) {
             log.error("The application folder could not be found.\nAre you sure that you set the correct path in the 'application.properties' file?");
         }
 
-        File instanceRootFolder = new File(config.getFolderPath() + File.separator + INSTANCES_FOLDER);
+        File instanceRootFolder = new File(getRootFolderPath(false) + File.separator + INSTANCES_FOLDER);
         /* create 'instances' folder */
         if (!instanceRootFolder.exists()) {
             instanceRootFolder.mkdirs();
@@ -58,7 +58,7 @@ public class FileSystemService {
     }
 
     public List<String> getInstalledServerVersions() {
-        File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
+        File serverRootFolder = new File(getRootFolderPath(false) + File.separator + SERVERS_FOLDER);
 
         if (!serverRootFolder.exists()) {
             log.error(serverRootFolder.getAbsolutePath() + " could not be found.");
@@ -73,14 +73,14 @@ public class FileSystemService {
         return Collections.emptyList();
     }
 
-    public String getInstanceFolderPath(InstanceDto instance) {
-        return config.getFolderPath() + File.separator + INSTANCES_FOLDER + File.separator + instance.getId();
+    public String getInstanceFolderPath(InstanceDto instance, boolean ignoreContainerized) {
+        return getRootFolderPath(ignoreContainerized) + File.separator + INSTANCES_FOLDER + File.separator + instance.getId();
     }
 
     @SuppressWarnings("Duplicates")
     public void createInstanceFolder(InstanceDto instance) {
-        File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
-        File instanceFolder = new File(getInstanceFolderPath(instance));
+        File serverRootFolder = new File(getRootFolderPath(false) + File.separator + SERVERS_FOLDER);
+        File instanceFolder = new File(getInstanceFolderPath(instance, false));
 
         if (instanceFolder.exists()) {
             instanceFolder.delete();
@@ -100,7 +100,7 @@ public class FileSystemService {
     }
 
     public void deleteInstanceFolder(InstanceDto instance) {
-        File folderToDelete = new File(getInstanceFolderPath(instance));
+        File folderToDelete = new File(getInstanceFolderPath(instance, false));
 
         log.info("Deleting folder '" + folderToDelete.getAbsolutePath() + "'.");
 
@@ -109,10 +109,10 @@ public class FileSystemService {
 
     @SuppressWarnings("Duplicates")
     public void updateInstanceFolder(InstanceDto instance) {
-        File serverRootFolder = new File(config.getFolderPath() + File.separator + SERVERS_FOLDER);
-        File instanceFolder = new File(getInstanceFolderPath(instance));
+        File serverRootFolder = new File(getRootFolderPath(false) + File.separator + SERVERS_FOLDER);
+        File instanceFolder = new File(getInstanceFolderPath(instance, false));
         File configFolder = new File(instanceFolder.getAbsolutePath() + File.separator + CFG_FOLDER);
-        File serverExecutable = new File(getInstanceFolderPath(instance) + config.getServerExecutableName());
+        File serverExecutable = new File(getInstanceFolderPath(instance, false) + config.getServerExecutableName());
 
         deleteFolder(configFolder);
 
@@ -126,8 +126,8 @@ public class FileSystemService {
         }
     }
 
-    public boolean instanceHasValidFolder(InstanceDto instanceDto) {
-        String instanceRootFolderPath = getInstanceFolderPath(instanceDto);
+    public boolean instanceHasValidFolder(InstanceDto instance) {
+        String instanceRootFolderPath = getInstanceFolderPath(instance, false);
         String instanceCfgFolderPath = instanceRootFolderPath + File.separator + CFG_FOLDER;
         String instanceLogFolderPath = instanceRootFolderPath + File.separator + LOG_FOLDER;
 
@@ -143,6 +143,14 @@ public class FileSystemService {
 
         /* check if any of these files/folders do not exist */
         return filesToCheck.stream().allMatch(File::exists);
+    }
+
+    private String getRootFolderPath(boolean ignoreContainerize) {
+        if (!ignoreContainerize && config.isContainerized()) {
+            return config.getFolderPathContainerized();
+        } else {
+            return config.getFolderPath();
+        }
     }
 
     private void deleteFolder(File folder) {
