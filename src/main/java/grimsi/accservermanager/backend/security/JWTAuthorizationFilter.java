@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private final Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
+    private final Logger log = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private ApplicationConfiguration config;
 
@@ -61,7 +61,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                     return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
                 }
             } catch (SignatureVerificationException e) {
-                logger.warn("Error verifying JWT: " + e.getMessage());
+                log.warn("Error verifying JWT: " + e.getMessage());
             }
             return null;
         }

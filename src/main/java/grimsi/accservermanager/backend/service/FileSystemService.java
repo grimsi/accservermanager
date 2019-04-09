@@ -2,7 +2,6 @@ package grimsi.accservermanager.backend.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import grimsi.accservermanager.backend.ACCServerManager;
 import grimsi.accservermanager.backend.configuration.ApplicationConfiguration;
 import grimsi.accservermanager.backend.dto.InstanceDto;
 import grimsi.accservermanager.backend.exception.CouldNotCreateFolderException;
@@ -25,11 +24,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FileSystemService {
 
-    private final Logger log = LoggerFactory.getLogger(ACCServerManager.class);
+    private final Logger log = LoggerFactory.getLogger(FileSystemService.class);
     private final String SERVERS_FOLDER = "servers";
     private final String INSTANCES_FOLDER = "instances";
     private final String LOG_FOLDER = "log";
@@ -51,9 +51,10 @@ public class FileSystemService {
         }
 
         File instanceRootFolder = new File(getRootFolderPath(false) + File.separator + INSTANCES_FOLDER);
+
         /* create 'instances' folder */
-        if (!instanceRootFolder.exists()) {
-            instanceRootFolder.mkdirs();
+        if (!instanceRootFolder.exists() && instanceRootFolder.mkdirs()) {
+            log.debug("Created instace root folder.");
         }
     }
 
@@ -82,13 +83,16 @@ public class FileSystemService {
         File serverRootFolder = new File(getRootFolderPath(false) + File.separator + SERVERS_FOLDER);
         File instanceFolder = new File(getInstanceFolderPath(instance, false));
 
-        if (instanceFolder.exists()) {
-            instanceFolder.delete();
+        if (instanceFolder.exists() && instanceFolder.delete()) {
+            log.debug("Deleted existing folder for instance: '" + instance.getId() + "'.");
         }
 
         try {
-            log.info("Creating folder '" + instanceFolder.getAbsolutePath() + "'.");
-            instanceFolder.mkdirs();
+            log.debug("Creating folder '" + instanceFolder.getAbsolutePath() + "'.");
+
+            if (instanceFolder.mkdirs()) {
+                log.debug("Created folder '" + instanceFolder.getAbsolutePath() + "'.");
+            }
 
             copyServerExecutable(serverRootFolder, instanceFolder, instance.getVersion());
             createLogFolder(instanceFolder);
@@ -102,7 +106,7 @@ public class FileSystemService {
     public void deleteInstanceFolder(InstanceDto instance) {
         File folderToDelete = new File(getInstanceFolderPath(instance, false));
 
-        log.info("Deleting folder '" + folderToDelete.getAbsolutePath() + "'.");
+        log.debug("Deleting folder '" + folderToDelete.getAbsolutePath() + "'.");
 
         deleteFolder(folderToDelete);
     }
@@ -116,7 +120,9 @@ public class FileSystemService {
 
         deleteFolder(configFolder);
 
-        serverExecutable.delete();
+        if (serverExecutable.delete()) {
+            log.debug("Deleted server executable for instance '" + instance.getId() + "'.");
+        }
 
         try {
             copyServerExecutable(serverRootFolder, instanceFolder, instance.getVersion());
@@ -154,11 +160,14 @@ public class FileSystemService {
     }
 
     private void deleteFolder(File folder) {
-        try {
-            Files.walk(folder.toPath())
-                    .map(Path::toFile)
+        try (Stream<Path> fileStream = Files.walk(folder.toPath())) {
+            fileStream.map(Path::toFile)
                     .sorted((o1, o2) -> -o1.compareTo(o2))
-                    .forEach(File::delete);
+                    .forEach((file) -> {
+                        if (file.delete()) {
+                            log.debug("Deleted file '" + file.getAbsolutePath() + "'.");
+                        }
+                    });
         } catch (IOException e) {
             throw new CouldNotDeleteFolderException(folder.toPath());
         }
@@ -172,34 +181,49 @@ public class FileSystemService {
 
     private void createLogFolder(File instanceFolder) {
         File logFolder = new File(instanceFolder.getAbsolutePath() + File.separator + LOG_FOLDER);
-        logFolder.mkdirs();
+
+        if (logFolder.mkdirs()) {
+            log.debug("Created log folder in '" + instanceFolder + "'.");
+        }
 
         File logErrorFolder = new File(logFolder.getAbsolutePath() + File.separator + LOG_ERROR_FOLDER);
-        logErrorFolder.mkdirs();
+
+        if (logErrorFolder.mkdirs()) {
+            log.debug("Created log-error folder in '" + instanceFolder + "'.");
+        }
     }
 
     private void createCfgFolder(File instanceFolder, InstanceDto instance) throws IOException {
         File cfgFolder = new File(instanceFolder.getAbsolutePath() + File.separator + CFG_FOLDER);
-        cfgFolder.mkdirs();
+
+        if (cfgFolder.mkdirs()) {
+            log.debug("Created config folder in '" + instanceFolder + "'.");
+        }
 
         File configurationJson = new File(cfgFolder.getAbsolutePath() + File.separator + CONFIGURATION_JSON);
-        configurationJson.createNewFile();
-        writeFile(configurationJson, gson.toJson(instance.getConfiguration()));
+        if (configurationJson.createNewFile()) {
+            writeFile(configurationJson, gson.toJson(instance.getConfiguration()));
+            log.debug("Created configuration.json in '" + configurationJson.getAbsolutePath() + "'.");
+        }
 
         File settingsJson = new File(cfgFolder.getAbsolutePath() + File.separator + SETTINGS_JSON);
-        settingsJson.createNewFile();
-        writeFile(settingsJson, gson.toJson(instance.getSettings()));
+        if (settingsJson.createNewFile()) {
+            writeFile(settingsJson, gson.toJson(instance.getSettings()));
+            log.debug("Created settings.json in '" + settingsJson.getAbsolutePath() + "'.");
+        }
 
         File eventJson = new File(cfgFolder.getAbsolutePath() + File.separator + EVENT_JSON);
-        eventJson.createNewFile();
-        writeFile(eventJson, gson.toJson(instance.getEvent()));
+        if (eventJson.createNewFile()) {
+            writeFile(eventJson, gson.toJson(instance.getEvent()));
+            log.debug("Created event.json in '" + eventJson.getAbsolutePath() + "'.");
+        }
     }
 
     private void writeFile(File file, String content) throws IOException {
-        FileWriter fileWriter = new FileWriter(file);
-        fileWriter.write(content);
-        fileWriter.flush();
-        fileWriter.close();
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(content);
+            fileWriter.flush();
+        }
     }
 
 }

@@ -129,7 +129,7 @@ public class EventService {
         try {
             event = eventRepository.save(event);
         } catch (DuplicateKeyException e) {
-            throw new ConflictException("Name '" + event.name + "' is already in use.");
+            throw new ConflictException("Name '" + event.getName() + "' is already in use.");
         }
 
         return convertToDto(event);

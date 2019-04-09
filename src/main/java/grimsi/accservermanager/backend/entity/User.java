@@ -5,13 +5,18 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Document
 @Getter
 @Setter
-public class User {
-    @Id
-    public String id;
+public class User implements Serializable {
 
-    public String username;
-    public String password;
+    private static final long serialVersionUID = 7650367368584885329L;
+
+    @Id
+    private String id;
+
+    private String username;
+    private String password;
 }

@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,8 +62,8 @@ public class InstanceService {
     public InstanceDto create(InstanceDto instanceDto) {
         Instance instance = convertToEntity(instanceDto);
 
-        instance.state = InstanceState.STOPPED;
-        instance.restartRequired = false;
+        instance.setState(InstanceState.STOPPED);
+        instance.setRestartRequired(false);
 
         instanceDto = convertToDto(instance);
         instanceDto.setEvent(eventService.findById(instanceDto.getEvent().getId()));
@@ -224,15 +226,21 @@ public class InstanceService {
         try {
             instance = instanceRepository.save(instance);
         } catch (DuplicateKeyException e) {
-            throw new ConflictException("Name '" + instance.name + "' is already in use.");
+            throw new ConflictException("Name '" + instance.getName() + "' is already in use.");
         }
 
         return convertToDto(instance);
     }
 
     public List<InstanceDto> findInstancesByEventId(String eventId) {
-        List<Instance> matchingInstances = instanceRepository.findAllByEvent_Id(eventId).get();
-        return convertToDto(matchingInstances);
+        Optional<List<Instance>> optionalInstances = instanceRepository.findAllByEvent_Id(eventId);
+
+        if (optionalInstances.isPresent()) {
+            List<Instance> matchingInstances = optionalInstances.get();
+            return convertToDto(matchingInstances);
+        }
+
+        return Collections.emptyList();
     }
 
     public InstanceDto findByName(String name) {
@@ -249,8 +257,14 @@ public class InstanceService {
     }
 
     private List<InstanceDto> getInstancesByPorts(int tcpPort, int udpPort) {
-        List<Instance> matchingInstances = instanceRepository.findAllByConfiguration_TcpPortOrConfiguration_UdpPort(tcpPort, udpPort).get();
-        return convertToDto(matchingInstances);
+        Optional<List<Instance>> optionalInstances = instanceRepository.findAllByConfiguration_TcpPortOrConfiguration_UdpPort(tcpPort, udpPort);
+
+        if (optionalInstances.isPresent()) {
+            List<Instance> matchingInstances = optionalInstances.get();
+            return convertToDto(matchingInstances);
+        }
+
+        return Collections.emptyList();
     }
 
     private void checkIfPortsAreInUse(InstanceDto instanceDto) {

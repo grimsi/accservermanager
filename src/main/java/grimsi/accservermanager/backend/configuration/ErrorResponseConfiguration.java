@@ -1,6 +1,7 @@
 package grimsi.accservermanager.backend.configuration;
 
 import grimsi.accservermanager.backend.error.ApiError;
+import org.owasp.encoder.Encode;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,12 @@ public class ErrorResponseConfiguration extends ResponseEntityExceptionHandler {
                 )
         );
 
-        ApiError apiError = new ApiError(status, errorsMap, "Validation error", ((ServletWebRequest) request).getRequest().getRequestURI());
+
+        String requestUri = ((ServletWebRequest) request).getRequest().getRequestURI();
+
+        requestUri = Encode.forHtml(requestUri);
+
+        ApiError apiError = new ApiError(status, errorsMap, "Validation error", requestUri);
 
         return new ResponseEntity<>(apiError, headers, status);
     }

@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Configuration {
-    public int udpPort;
-    public int tcpPort;
-    public int maxClients;
-    public int configVersion = 1;
+    private int udpPort;
+    private int tcpPort;
+    private int maxClients;
+    private int configVersion = 1;
 }

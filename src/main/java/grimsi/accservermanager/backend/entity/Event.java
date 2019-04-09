@@ -16,20 +16,20 @@ import java.util.List;
 @Setter
 public class Event {
     @Id
-    public String id;
+    private String id;
 
     @Indexed(unique = true)
-    public String name;
+    private String name;
 
-    public Track track;
-    public EventType eventType;
-    public int preRaceWaitingTimeSeconds;
-    public int sessionOverTimeSeconds;
-    public int ambientTemp;
-    public int trackTemp;
-    public BigDecimal cloudLevel;
-    public BigDecimal rain;
-    public BigDecimal weatherRandomness;
-    public List<Session> sessions;
-    public int configVersion = 1;
+    private Track track;
+    private EventType eventType;
+    private int preRaceWaitingTimeSeconds;
+    private int sessionOverTimeSeconds;
+    private int ambientTemp;
+    private int trackTemp;
+    private BigDecimal cloudLevel;
+    private BigDecimal rain;
+    private BigDecimal weatherRandomness;
+    private List<Session> sessions;
+    private int configVersion = 1;
 }

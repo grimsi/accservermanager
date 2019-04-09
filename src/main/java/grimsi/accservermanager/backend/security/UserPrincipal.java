@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class UserPrincipal implements UserDetails {
 
+    private static final long serialVersionUID = 6850396258498499969L;
     private User user;
     private List<SimpleGrantedAuthority> authorities;
 
@@ -23,12 +24,12 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.username;
+        return user.getUsername();
     }
 
     @Override

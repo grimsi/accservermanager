@@ -48,9 +48,13 @@ public class ContainerService {
     public List<Container> getAllContainers() {
         try {
             return docker.listContainers(DockerClient.ListContainersParam.allContainers());
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not get a list of containers: " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+
+        return Collections.emptyList();
     }
 
     public void deployInstance(InstanceDto instance) {
@@ -75,11 +79,13 @@ public class ContainerService {
             if (images.isEmpty()) {
                 docker.pull(config.getContainerImage());
             }
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not find/pull image '" + config.getContainerImage() + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
-        log.info("Mounting dir: '" + fileSystemService.getInstanceFolderPath(instance, true) + ":" + config.getFolderPathContainerized() + "'.");
+        log.debug("Mounting dir: '" + fileSystemService.getInstanceFolderPath(instance, true) + ":" + config.getFolderPathContainerized() + "'.");
 
         HostConfig hostConfig = HostConfig.builder()
                 .portBindings(portBindings)
@@ -94,47 +100,58 @@ public class ContainerService {
                 .build();
 
         try {
+            log.debug("Container config: \n\n" + gson.toJson(containerConfig) + "\n\n");
+
             String containerName = buildContainerName(instance);
-            log.info("Container config: \n\n" + gson.toJson(containerConfig) + "\n\n");
             ContainerCreation container = docker.createContainer(containerConfig, containerName);
 
             instance.setContainer(container.id());
             instanceService.save(instance);
 
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not create container for instance '" + instance.getId() + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     public void startInstance(InstanceDto instance) {
         try {
             docker.startContainer(instance.getContainer());
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not start container '" + instance.getContainer() + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     public void stopInstance(InstanceDto instance) {
         try {
             docker.stopContainer(instance.getContainer(), 0);
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not stop container '" + instance.getContainer() + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     public void pauseInstance(InstanceDto instance) {
         try {
             docker.pauseContainer(instance.getContainer());
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not pause container '" + instance.getContainer() + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     public void resumeInstance(InstanceDto instance) {
         try {
             docker.unpauseContainer(instance.getContainer());
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Could not resume container '" + instance.getContainer() + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -146,16 +163,20 @@ public class ContainerService {
         try {
             docker.stopContainer(id, 0);
             docker.removeContainer(id);
-        } catch (DockerException | InterruptedException | NullPointerException e) {
+        } catch (DockerException | NullPointerException e) {
             throw new ContainerException("Cant delete container '" + id + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     public void pullImage(String imageName) {
         try {
             docker.pull(imageName);
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             throw new ContainerException("Cant pull image '" + imageName + "': " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -169,9 +190,12 @@ public class ContainerService {
     public ContainerStats getContainerStats(InstanceDto instance) {
         try {
             return docker.stats(instance.getContainer());
-        } catch (DockerException | InterruptedException e) {
+        } catch (DockerException e) {
             log.error(e.toString());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+
         return null;
     }
 

@@ -13,23 +13,23 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 public class Instance {
     @Id
-    public String id;
+    private String id;
 
-    public boolean restartRequired;
+    private boolean restartRequired;
 
     @Indexed(unique = true)
-    public String name;
+    private String name;
 
-    public InstanceState state;
+    private InstanceState state;
 
-    public String container;
+    private String container;
 
-    public Configuration configuration;
+    private Configuration configuration;
 
-    public Settings settings;
+    private Settings settings;
 
     @DBRef
-    public Event event;
+    private Event event;
 
     private String version;
 }

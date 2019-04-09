@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
 
     public boolean authenticate(String username, String password) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + "could not be found."));
-        return passwordEncoder.matches(password, user.password);
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
     public boolean authenticate(UserDto userDto) {
@@ -38,8 +38,8 @@ public class UserService implements UserDetailsService {
 
     public User registerUser(UserDto userDto) {
         User user = new User();
-        user.username = userDto.getUsername();
-        user.password = passwordEncoder.encode(userDto.getPassword());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(user);
     }
 

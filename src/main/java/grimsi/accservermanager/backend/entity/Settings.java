@@ -6,10 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Settings {
-    public String serverName;
-    public String password;
-    public String adminPassword;
-    public int trackMedalsRequirement;
-    public int safetyRatingRequirement;
-    public int configVersion = 1;
+    private String serverName;
+    private String password;
+    private String adminPassword;
+    private int trackMedalsRequirement;
+    private int safetyRatingRequirement;
+    private int configVersion = 1;
 }

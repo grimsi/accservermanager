@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Session {
-    public int hourOfDay;
-    public int dayOfWeekend;
-    public BigDecimal timeMultiplier;
-    public SessionType sessionType;
-    public int sessionDurationMinutes;
+    private int hourOfDay;
+    private int dayOfWeekend;
+    private BigDecimal timeMultiplier;
+    private SessionType sessionType;
+    private int sessionDurationMinutes;
 }
