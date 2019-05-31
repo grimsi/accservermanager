@@ -1,10 +1,14 @@
 package grimsi.accservermanager.backend.enums;
 
 public enum Track {
-    nurburgring,
-    misano,
-    paul_ricard,
+    barcelona,
+    brands_hatch,
     hungaroring,
-    zolder,
-    monza
+    misano,
+    monza,
+    nurburgring,
+    paul_ricard,
+    silverstone,
+    spa,
+    zolder
 }
