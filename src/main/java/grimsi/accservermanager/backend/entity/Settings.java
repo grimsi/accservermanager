@@ -11,5 +11,6 @@ public class Settings {
     private String adminPassword;
     private int trackMedalsRequirement;
     private int safetyRatingRequirement;
+    private int racecraftRatingRequirement;
     private int configVersion = 1;
 }

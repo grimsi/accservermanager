@@ -35,4 +35,9 @@ public class SettingsDto {
     @Min(value = -1, message = "safetyRatingRequirement has to be between -1 and 99.")
     @Max(value = 99, message = "safetyRatingRequirement has to be between -1 and 99.")
     private int safetyRatingRequirement;
+
+    @NotNull(message = "racecraftRatingRequirement is required.")
+    @Min(value = -1, message = "racecraftRatingRequirement has to be between -1 and 99.")
+    @Max(value = 99, message = "racecraftRatingRequirement has to be between -1 and 99.")
+    private int racecraftRatingRequirement;
 }

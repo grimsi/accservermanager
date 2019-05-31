@@ -21,6 +21,7 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         settings.setAdminPassword("testAdminPassword");
         settings.setTrackMedalsRequirement(0);
         settings.setSafetyRatingRequirement(0);
+        settings.setRacecraftRatingRequirement(0);
 
         SettingsDto settingsDto = modelMapper.map(settings, SettingsDto.class);
 
@@ -35,6 +36,7 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         settingsDto.setAdminPassword("testAdminPassword");
         settingsDto.setTrackMedalsRequirement(0);
         settingsDto.setSafetyRatingRequirement(0);
+        settingsDto.setRacecraftRatingRequirement(0);
 
         Settings settings = modelMapper.map(settingsDto, Settings.class);
 
@@ -48,5 +50,6 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         assertEquals(settings.getAdminPassword(), settingsDto.getAdminPassword());
         assertEquals(settings.getTrackMedalsRequirement(), settingsDto.getTrackMedalsRequirement());
         assertEquals(settings.getSafetyRatingRequirement(), settingsDto.getSafetyRatingRequirement());
+        assertEquals(settings.getRacecraftRatingRequirement(), settingsDto.getRacecraftRatingRequirement());
     }
 }
