@@ -26,6 +26,12 @@ public class SettingsDto {
     @NotBlank(message = "adminPassword is required.")
     private String adminPassword;
 
+    @Min(value = 1, message = "spectatorSlots has to be between 1 and 24.")
+    @Max(value = 24, message = "spectatorSlots has to be between 1 and 24.")
+    private int spectatorSlots;
+
+    private String spectatorPassword;
+
     @NotNull(message = "trackMedalsRequirement is required.")
     @Min(value = 0, message = "trackMedalsRequirement has to be between 0 and 3.")
     @Max(value = 3, message = "trackMedalsRequirement has to be between 0 and 3.")

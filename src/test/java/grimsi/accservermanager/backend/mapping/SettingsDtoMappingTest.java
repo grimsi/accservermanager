@@ -19,6 +19,8 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         settings.setServerName("testServer");
         settings.setPassword("testPassword");
         settings.setAdminPassword("testAdminPassword");
+        settings.setSpectatorSlots(10);
+        settings.setSpectatorPassword("testPassword");
         settings.setTrackMedalsRequirement(0);
         settings.setSafetyRatingRequirement(0);
         settings.setRacecraftRatingRequirement(0);
@@ -34,6 +36,8 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         settingsDto.setServerName("testServer");
         settingsDto.setPassword("testPassword");
         settingsDto.setAdminPassword("testAdminPassword");
+        settingsDto.setSpectatorSlots(10);
+        settingsDto.setSpectatorPassword("testPassword");
         settingsDto.setTrackMedalsRequirement(0);
         settingsDto.setSafetyRatingRequirement(0);
         settingsDto.setRacecraftRatingRequirement(0);
@@ -48,6 +52,8 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         assertEquals(settings.getServerName(), settingsDto.getServerName());
         assertEquals(settings.getPassword(), settingsDto.getPassword());
         assertEquals(settings.getAdminPassword(), settingsDto.getAdminPassword());
+        assertEquals(settings.getSpectatorSlots(), settingsDto.getSpectatorSlots());
+        assertEquals(settings.getSpectatorPassword(), settingsDto.getSpectatorPassword());
         assertEquals(settings.getTrackMedalsRequirement(), settingsDto.getTrackMedalsRequirement());
         assertEquals(settings.getSafetyRatingRequirement(), settingsDto.getSafetyRatingRequirement());
         assertEquals(settings.getRacecraftRatingRequirement(), settingsDto.getRacecraftRatingRequirement());
