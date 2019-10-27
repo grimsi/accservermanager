@@ -3,6 +3,10 @@
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=alert_status)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=security_rating)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=grimsi_accservermanager&metric=bugs)](https://sonarcloud.io/dashboard?id=grimsi_accservermanager)
 
+## This project is currently abandoned and not actively updated!
+Mainly due to the lack of time I have at the moment and also because I don't play ACC any more.
+I don't know if I will ever pick this up again, but if someone wants to develop and update it, feel free to contact me.
+
 ## Introduction
 This is the backend & frontend component of my AC Competizione Server Manager.
 The server manager consists of a Java Spring based backend and a Angular 7 based frontend.
