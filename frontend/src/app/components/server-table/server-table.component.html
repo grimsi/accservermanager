@@ -1,0 +1,105 @@
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Instance Name</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="serverName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Server Name</th>
+      <td mat-cell *matCellDef="let row">{{row.settings.serverName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="event">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Event</th>
+      <td mat-cell *matCellDef="let row">{{row.event.name}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="track">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Track</th>
+      <td mat-cell *matCellDef="let row">{{utils.trackEnumToString(row.event.track)}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="version">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Version</th>
+      <td mat-cell *matCellDef="let row">{{row.version}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>State</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button disabled>
+          <mat-icon disabled [matTooltip]="row.state.toLowerCase()"
+                    matTooltipPosition="after">{{utils.mapServerStateToIcon(row.state)}}</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ports">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Ports</th>
+      <td mat-cell *matCellDef="let row">
+        <p>UDP: {{row.configuration.udpPort}} TCP: {{row.configuration.tcpPort}}</p>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="restartRequired">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button *ngIf="row.restartRequired" (click)="restartServer(row)">
+          <mat-icon color="warn" matTooltip="Restart required" matTooltipPosition="after">
+            {{Icon.sync_problem}}
+          </mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="stateButtons">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button *ngIf="row.state === InstanceState.STOPPED"
+                (click)="startServer(row)">
+          <mat-icon matTooltip="Start server" matTooltipPosition="after">{{Icon.play_arrow}}</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="row.state !== InstanceState.STOPPED"
+                (click)="stopServer(row)">
+          <mat-icon matTooltip="Stop server" matTooltipPosition="after">{{Icon.stop}}</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="row.state === InstanceState.RUNNING"
+                (click)="pauseServer(row)">
+          <mat-icon matTooltip="Pause server" matTooltipPosition="after">{{Icon.pause}}</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="row.state === InstanceState.PAUSED"
+                (click)="resumeServer(row)">
+          <mat-icon matTooltip="Resume server" matTooltipPosition="after">{{Icon.play_arrow}}</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="managementButtons">
+      <th mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button (click)="createServer()">
+          <mat-icon matTooltip="Create a new server" matTooltipPosition="after" color="primary">{{Icon.add}}</mat-icon>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button (click)="editServer(row)">
+          <mat-icon matTooltip="Edit server" matTooltipPosition="after">{{Icon.edit}}</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteServer(row)" [disabled]="row.state !== InstanceState.STOPPED">
+          <mat-icon matTooltip="Delete server" matTooltipPosition="after">{{Icon.delete}}</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #paginator
+                 [length]="dataSource.data.length"
+                 [pageIndex]="0"
+                 [pageSize]="25"
+                 [pageSizeOptions]="[5, 25, 50, 100]">
+  </mat-paginator>
+</div>

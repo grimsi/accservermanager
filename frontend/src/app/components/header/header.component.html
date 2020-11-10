@@ -1,0 +1,30 @@
+<mat-toolbar role="heading">
+  <img src="../../../assets/graphics/acc-logo-header.png" alt="ACC Logo" class="logo">
+
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link *ngFor="let item of tabNavItems"
+       (click)="setActiveItem(item)"
+       [disabled]="!item.enabled"
+       routerLink="{{item.route}}"
+       routerLinkActive #rla="routerLinkActive"
+       [active]="rla.isActive">
+      <mat-icon class="menu-item-icon">{{item.icon}}</mat-icon>
+      {{item.title}}
+    </a>
+  </nav>
+
+  <span class="spacer"></span>
+
+  <p id="username" class="mat-hint">{{userService.userName}}</p>
+
+  <button mat-icon-button [matMenuTriggerFor]="headerDropDown">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #headerDropDown="matMenu">
+    <button mat-menu-item *ngFor="let item of dropDownItems"
+            (click)="item.action()">
+      <mat-icon>{{item.icon}}</mat-icon>
+      <span>{{item.title}}</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

@@ -1,0 +1,95 @@
+<h3 mat-dialog-title>Edit a server</h3>
+<mat-dialog-content>
+  <div *ngIf="eventsLoaded && versionsLoaded; else loading">
+    <form [formGroup]="editServerForm" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+
+      <mat-form-field>
+        <input matInput disabled type="text" placeholder="Instance ID" formControlName="id"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput disabled type="text" placeholder="Docker container ID" formControlName="container"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type="text" placeholder="Instance name (this name will be shown in the manager)"
+               formControlName="name"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select formControlName="version" placeholder="Version">
+          <mat-option *ngFor="let version of supportedAccVersions" [value]="version">
+            {{version}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select formControlName="event" placeholder="Event">
+          <mat-option *ngFor="let event of events" [value]="event">
+            {{event.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div formGroupName="configuration" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+        <mat-card-subtitle class="card-subtitle">Configuration</mat-card-subtitle>
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="UDP Port" formControlName="udpPort"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="TCP Port" formControlName="tcpPort"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Max. clients" formControlName="maxClients"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div formGroupName="settings" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+        <mat-card-subtitle>Settings</mat-card-subtitle>
+
+        <mat-form-field>
+          <input matInput type="text" placeholder="Server name (this name will be shown in-game)"
+                 formControlName="serverName"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="password" placeholder="Server password" formControlName="password"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="password" placeholder="Server admin password" formControlName="adminPassword"/>
+        </mat-form-field>
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Track Medal Requirement"
+                   formControlName="trackMedalsRequirement"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Safety Rating requirement"
+                   formControlName="safetyRatingRequirement"/>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <ng-template #loading>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <h4>Loading...</h4>
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="accent">Cancel</button>
+  <button mat-raised-button [disabled]="editServerForm.invalid" color="warn" (click)="submit()">Update</button>
+</mat-dialog-actions>

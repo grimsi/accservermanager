@@ -1,0 +1,661 @@
+openapi: 3.0.0
+info:
+  description: REST API Spec for a ACC server manager backend.
+  version: 0.3.0
+  title: AC Competizione Server Manager - Backend
+  license:
+    name: Dont Be a Dick Public License
+    url: https://dbad-license.org/
+servers:
+  - url: http://localhost:8000/v1
+    description: Local development server
+  - url: http://accservermanager.grimsi.de/v1
+    description: Production Server
+tags:
+  - name: auth
+    description: Authorization
+  - name: events
+    description: Manage events
+  - name: instances
+    description: Manage server instances
+  - name: results
+    description: Access server instance results
+  - name: metrics
+    description: Access to various metrics
+  - name: info
+    description: Miscellaneous information about the system
+paths:
+  /login:
+    post:
+      summary: Authorize the client
+      operationId: auth
+      tags:
+        - auth
+      requestBody:
+        description: A JSON object containing user credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: a JWT token
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security: []
+  /info:
+    get:
+      summary: Get information about the system
+      operationId: getInfo
+      tags:
+        - info
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SystemInfo"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security: []
+  /events:
+    get:
+      summary: List all events
+      operationId: getEvents
+      tags:
+        - events
+      parameters:
+        - name: name
+          in: query
+          description: Filter by name
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A array of events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Events"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a event
+      operationId: createEvent
+      tags:
+        - events
+      requestBody:
+        description: A JSON object containing the event
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: the created event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /event/{eventId}:
+    get:
+      summary: Get a specific event
+      operationId: getEventById
+      tags:
+        - events
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          description: The id of the event to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update a event
+      operationId: updateEventById
+      tags:
+        - events
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          description: The id of the event to retrieve
+          schema:
+            type: string
+      requestBody:
+        description: A JSON object containing the event
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '201':
+          description: the created configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a specific event
+      operationId: deleteEventById
+      tags:
+        - events
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          description: The id of the event to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Empty response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /events/stream:
+    get:
+      summary: Get a event stream for event related events (that sounds really bad, sorry)
+      operationId: getEventStream
+      tags:
+        - events
+      responses:
+        '200':
+          description: EventSource object
+          content:
+            text/event-stream:
+              schema:
+                type: object
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /events/schema:
+    get:
+      summary: Get the event schema
+      operationId: getEventSchema
+      tags:
+        - events
+      responses:
+        '200':
+          description: JSON Schema object for the event
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances:
+    get:
+      summary: List all instances
+      operationId: getInstances
+      tags:
+        - instances
+      parameters:
+        - name: name
+          in: query
+          description: Filter by name
+          required: false
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/InstanceState"
+      responses:
+        '200':
+          description: An array of instances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Instances"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a instance
+      operationId: createInstance
+      tags:
+        - instances
+      requestBody:
+        description: A JSON object containing the instance
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Instance'
+      responses:
+        '201':
+          description: the created instance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Instance"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/{instanceId}:
+    get:
+      summary: Get a specific instance
+      operationId: getInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Instance"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update a instance
+      operationId: updateInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to retrieve
+          schema:
+            type: string
+      requestBody:
+        description: A JSON object containing the instance
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Instance'
+      responses:
+        '201':
+          description: the created configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Instance"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Delete a specific instance
+      operationId: deleteInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Empty response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/{instanceId}/start:
+    get:
+      summary: Start a specific instance
+      operationId: startInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to start
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/{instanceId}/stop:
+    get:
+      summary: Stop a specific instance
+      operationId: stopInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to stop
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/{instanceId}/pause:
+    get:
+      summary: Pause a specific instance
+      operationId: pauseInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to start
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/{instanceId}/resume:
+    get:
+      summary: Resume a specific instance
+      operationId: resumeInstanceById
+      tags:
+        - instances
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          description: The id of the instance to stop
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/stream:
+    get:
+      summary: Get a event stream for instance related events
+      operationId: getInstanceStream
+      tags:
+        - instances
+      responses:
+        '200':
+          description: EventSource object
+          content:
+            text/event-stream:
+              schema:
+                type: object
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /instances/schema:
+    get:
+      summary: Get the instance schema
+      operationId: getInstanceSchema
+      tags:
+        - instances
+      responses:
+        '200':
+          description: JSON Schema object for the instance
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /prometheus:
+    get:
+      summary: Get metrics in prometheus.io compatible format. Uses Port 9554
+      operationId: getMetricsPrometheus
+      tags:
+        - metrics
+      responses:
+        '200':
+          description: Various metrics in prometheus compatible format
+          content:
+            application/json:
+              schema:
+                type: string
+      security: []
+components:
+  schemas:
+    User:
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Event:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        track:
+          type: string
+          enum: [nurburgring, misano, paul_ricard, hungaroring, zolder, monza]
+        eventType:
+          type: string
+          enum: [E_3h, E_6h, E_24h]
+        preRaceWaitingTimeSeconds:
+          type: integer
+          format: int64
+        sessionOverTimeSeconds:
+          type: integer
+          format: int64
+        ambientTemp:
+          type: integer
+          format: int64
+        trackTemp:
+          type: integer
+          format: int64
+        cloudLevel:
+          type: number
+          format: BigDecimal
+        rain:
+          type: number
+          format: BigDecimal
+        sessions:
+          $ref: "#/components/schemas/Sessions"
+    Events:
+      type: array
+      items:
+        $ref: "#/components/schemas/Event"
+    Sessions:
+      type: array
+      items:
+        $ref: "#/components/schemas/Session"
+    Session:
+      type: object
+      properties:
+        hourOfDay:
+          type: integer
+          format: int64
+        dayOfWeekend:
+          type: integer
+          format: int64
+        timeMultiplier:
+          type: number
+          format: BigDecimal
+        sessionType:
+          type: string
+          enum: [p, q, r]
+        sessionDurationMinutes:
+          type: integer
+          format: int64
+    Instance:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        state:
+          $ref: "#/components/schemas/InstanceState"
+        container:
+          type: string
+        event:
+          $ref: "#/components/schemas/Event"
+        configuration:
+          $ref: "#/components/schemas/Configuration"
+        settings:
+          $ref: "#/components/schemas/Settings"
+    Instances:
+      type: array
+      items:
+        $ref: "#/components/schemas/Instance"
+    InstanceState:
+      type: string
+      enum: [stopped, running, crashed, paused, unknown]
+    Settings:
+      type: object
+      properties:
+        serverName:
+          type: string
+        password:
+          type: string
+        adminPassword:
+          type: string
+        configVersion:
+          type: integer
+          enum: [1]
+    Configuration:
+      type: object
+      properties:
+        udpPort:
+          type: integer
+          format: int64
+        tcpPort:
+          type: integer
+          format: int64
+        maxClients:
+          type: integer
+          format: int64
+        configVersion:
+          type: integer
+          enum: [1]
+    SystemInfo:
+      type: object
+      properties:
+        version:
+          type: string
+        accVersion:
+          type: string
+        metricsEnabled:
+          type: boolean
+        supportedAccVersions:
+          type: array
+          items:
+            type: string
+    Error:
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  securitySchemes:
+    auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - auth: []

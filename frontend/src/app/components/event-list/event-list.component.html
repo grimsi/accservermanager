@@ -1,0 +1,14 @@
+<div *ngIf="this.loading" fxLayout="column" fxLayoutAlign="start center" fxFill>
+  <h2>Loading events...</h2>
+  <mat-spinner diameter="30"></mat-spinner>
+</div>
+<div *ngIf="!this.loading" fxLayout="column" fxLayoutAlign="space-between stretch" fxFill>
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <div *ngIf="this.events.length === 0" fxLayout="column" fxLayoutAlign="center center">
+      <h2>No events found.</h2>
+      <button mat-raised-button color="warn" (click)="openCreateEventDialog()">Create your first event</button>
+    </div>
+    <app-event-table *ngIf="!(this.events.length === 0)" [data]="events" fxFlex="80"
+                     style="margin-top: 25px;"></app-event-table>
+  </div>
+</div>

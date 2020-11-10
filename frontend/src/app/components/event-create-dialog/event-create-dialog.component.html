@@ -1,0 +1,116 @@
+<h3 mat-dialog-title>Create a new event</h3>
+<mat-dialog-content>
+  <form [formGroup]="createEventForm" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+
+    <mat-form-field>
+      <input matInput type="text" placeholder="Event Name" formControlName="name"/>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Track" formControlName="track">
+        <mat-option *ngFor="let track of trackKeys" [value]="track">
+          {{utils.trackEnumToString(track)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Event Type" formControlName="eventType">
+        <mat-option *ngFor="let eventType of eventTypeKeys" [value]="eventType">
+          {{utils.eventTypeToString(eventType)}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Pre-race waiting time (in s)"
+               formControlName="preRaceWaitingTimeSeconds"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Session-over waiting time (in s)"
+               formControlName="sessionOverTimeSeconds"/>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Ambient temperature (in °C)" formControlName="ambientTemp"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Track temperature (in °C)" formControlName="trackTemp"/>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Cloud level" formControlName="cloudLevel"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Rain level" formControlName="rain"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Weather randomness" formControlName="weatherRandomness"/>
+      </mat-form-field>
+    </div>
+
+    <div formArrayName="sessions" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+      <p class="card-subtitle">Sessions</p>
+
+      <div *ngFor="let session of sessions.controls; let i=index">
+        <mat-card-subtitle>Session {{i + 1}}</mat-card-subtitle>
+        <div [formGroup]="session" fxLayout="column" fxLayoutAlign="space-evenly stretch">
+          <mat-form-field>
+            <input matInput type="number" placeholder="Time (in h)" formControlName="hourOfDay"/>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput type="number" placeholder="Time Multiplier" formControlName="timeMultiplier"/>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select placeholder="Day" formControlName="dayOfWeekend">
+              <mat-option *ngFor="let day of [0,1,2]" [value]="day">
+                {{utils.mapNumberToDay(day)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select placeholder="Session Type" formControlName="sessionType">
+              <mat-option *ngFor="let sessionType of sessionTypeKeys" [value]="sessionType">
+                {{utils.mapSessionTypeToString(sessionType)}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput type="number" placeholder="Session Duration (in m)"
+                   formControlName="sessionDurationMinutes"/>
+          </mat-form-field>
+
+          <mat-divider *ngIf="i < (sessions.length - 1)" style="margin-bottom: 10px;"></mat-divider>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-around center">
+        <button [disabled]="!(sessions.length > 1)" mat-icon-button (click)="removeLastSession()">
+          <mat-icon matTooltip="Remove last session"
+                    matTooltipPosition="after">{{Icon.remove}}</mat-icon>
+        </button>
+        <button mat-icon-button (click)="addSession()">
+          <mat-icon matTooltip="Add session" matTooltipPosition="after">{{Icon.add}}</mat-icon>
+        </button>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close color="accent">Cancel</button>
+  <button mat-raised-button [disabled]="createEventForm.invalid" color="warn" (click)="submit()">Create</button>
+</mat-dialog-actions>

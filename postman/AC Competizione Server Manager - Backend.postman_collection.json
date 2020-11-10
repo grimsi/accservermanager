@@ -1,0 +1,1638 @@
+{
+	"info": {
+		"_postman_id": "241f8de6-9e40-4aca-9a34-7a289b47797d",
+		"name": "AC Competizione Server Manager - Backend",
+		"description": "REST API Spec for a ACC server manager backend.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "events",
+			"item": [
+				{
+					"name": "{event Id}",
+					"item": [
+						{
+							"name": "Get a specific event",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/events/{{eventId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events",
+										"{{eventId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Expected response to a valid request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/configs/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"configs",
+												"<string>"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"<long>\",\n \"name\": \"<string>\",\n \"tag\": \"<string>\"\n}"
+								},
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/configs/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"configs",
+												"<string>"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update a event",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"<long>\",\n    \"name\": \"<string>\",\n    \"tag\": \"<string>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/events/{{eventId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events",
+										"{{eventId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": \"<long>\",\n    \"name\": \"<string>\",\n    \"tag\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/configs/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"configs",
+												"<string>"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								},
+								{
+									"name": "the created configuration",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": \"<long>\",\n    \"name\": \"<string>\",\n    \"tag\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/configs/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"configs",
+												"<string>"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"<long>\",\n \"name\": \"<string>\",\n \"tag\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete a specific event",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/events/{{eventId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"events",
+										"{{eventId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Empty response",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/configs/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"configs",
+												"<string>"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/configs/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"configs",
+												"<string>"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								}
+							]
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List all events",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "A array of configurations",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configs?name=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configs"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "<string>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n {\n  \"id\": \"<long>\",\n  \"name\": \"<string>\",\n  \"tag\": \"<string>\"\n },\n {\n  \"id\": \"<long>\",\n  \"name\": \"<string>\",\n  \"tag\": \"<string>\"\n }\n]"
+						},
+						{
+							"name": "unexpected error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configs?name=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configs"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "<string>"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create a event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "12017935-a586-48a4-9f4e-94fe9e0965e1",
+								"exec": [
+									"pm.environment.set(\"eventId\", JSON.parse(responseBody).id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test\",\n    \"track\": \"nurburgring\",\n    \"eventType\": \"E_3h\",\n    \"preRaceWaitingTimeSeconds\": 15,\n    \"sessionOverTimeSeconds\": 120,\n    \"ambientTemp\": 26,\n    \"trackTemp\": 30,\n    \"cloudLevel\": 0.3,\n    \"rain\": 0,\n    \"sessions\": [\n        {\n            \"hourOfDay\": 9,\n            \"dayOfWeekend\": 1,\n            \"timeMultiplier\": 1,\n            \"sessionType\": \"P\",\n            \"sessionDurationMinutes\": 7\n        },\n        {\n            \"hourOfDay\": 18,\n            \"dayOfWeekend\": 1,\n            \"timeMultiplier\": 1,\n            \"sessionType\": \"Q\",\n            \"sessionDurationMinutes\": 10\n        },\n        {\n            \"hourOfDay\": 14,\n            \"dayOfWeekend\": 2,\n            \"timeMultiplier\": 1,\n            \"sessionType\": \"R\",\n            \"sessionDurationMinutes\": 10\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "the created configuration",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"<long>\",\n    \"name\": \"<string>\",\n    \"tag\": \"<string>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configs"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": \"<long>\",\n \"name\": \"<string>\",\n \"tag\": \"<string>\"\n}"
+						},
+						{
+							"name": "unexpected error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"<long>\",\n    \"name\": \"<string>\",\n    \"tag\": \"<string>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/configs",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"configs"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get event schema",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/events/schema",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"schema"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "instances",
+			"item": [
+				{
+					"name": "{instance Id}",
+					"item": [
+						{
+							"name": "Get a specific instance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances/{{instanceId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances",
+										"{{instanceId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Expected response to a valid request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"<string>\",\n \"name\": \"<string>\",\n \"state\": \"<string>\",\n \"container\": \"<string>\",\n \"config\": {\n  \"id\": \"<long>\",\n  \"name\": \"<string>\",\n  \"tag\": \"<string>\"\n }\n}"
+								},
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update a instance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"state\": \"<string>\",\n    \"container\": \"<string>\",\n    \"config\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\",\n        \"tag\": \"<string>\"\n    }\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances/{{instanceId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances",
+										"{{instanceId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"state\": \"<string>\",\n    \"container\": \"<string>\",\n    \"config\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\",\n        \"tag\": \"<string>\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								},
+								{
+									"name": "the created configuration",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"state\": \"<string>\",\n    \"container\": \"<string>\",\n    \"config\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\",\n        \"tag\": \"<string>\"\n    }\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": \"<string>\",\n \"name\": \"<string>\",\n \"state\": \"<string>\",\n \"container\": \"<string>\",\n \"config\": {\n  \"id\": \"<long>\",\n  \"name\": \"<string>\",\n  \"tag\": \"<string>\"\n }\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete a specific instance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances/{{instanceId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances",
+										"{{instanceId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								},
+								{
+									"name": "Empty response",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>"
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Start a specific instance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances/{{instanceId}}/start",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances",
+										"{{instanceId}}",
+										"start"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Expected response to a valid request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>/start",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>",
+												"start"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>/start",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>",
+												"start"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Stop a specific instance",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{jwt}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances/{{instanceId}}/stop",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances",
+										"{{instanceId}}",
+										"stop"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "unexpected error",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>/stop",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>",
+												"stop"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+								},
+								{
+									"name": "Expected response to a valid request",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{baseUrl}}/instances/<string>/stop",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"instances",
+												"<string>",
+												"stop"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "Text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List all instances",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/instances",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instances"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "unexpected error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances?name=<string>&state=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "<string>"
+										},
+										{
+											"key": "state",
+											"value": "<string>"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+						},
+						{
+							"name": "An array of instances",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances?name=<string>&state=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "<string>"
+										},
+										{
+											"key": "state",
+											"value": "<string>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n {\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"state\": \"<string>\",\n  \"container\": \"<string>\",\n  \"config\": {\n   \"id\": \"<long>\",\n   \"name\": \"<string>\",\n   \"tag\": \"<string>\"\n  }\n },\n {\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"state\": \"<string>\",\n  \"container\": \"<string>\",\n  \"config\": {\n   \"id\": \"<long>\",\n   \"name\": \"<string>\",\n   \"tag\": \"<string>\"\n  }\n }\n]"
+						}
+					]
+				},
+				{
+					"name": "Create a instance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9c456572-a693-4f61-8aa7-111109ac42ee",
+								"exec": [
+									"pm.environment.set(\"instanceId\", JSON.parse(responseBody).id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"auxTestInstance\",\n    \"version\": \"0.6.5\",\n    \"event\": {\n    \t\"id\":\"{{eventId}}\"\n    },\n    \"configuration\": {\n        \"udpPort\": 9600,\n        \"tcpPort\": 9600,\n        \"maxClients\": 24\n    },\n    \"settings\": {\n        \"serverName\": \"AUX eSports Test Server #1\",\n        \"adminPassword\": \"112\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/instances",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instances"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "the created instance",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"state\": \"<string>\",\n    \"container\": \"<string>\",\n    \"config\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\",\n        \"tag\": \"<string>\"\n    }\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": \"<long>\",\n \"name\": \"<string>\",\n \"tag\": \"<string>\"\n}"
+						},
+						{
+							"name": "unexpected error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"state\": \"<string>\",\n    \"container\": \"<string>\",\n    \"config\": {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\",\n        \"tag\": \"<string>\"\n    }\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/instances",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"instances"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "Text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get instance schema",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/instances/schema",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"instances",
+								"schema"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authorize the client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e732411a-6ecf-48b3-8acc-57ec15660634",
+						"exec": [
+							"let token = postman.getResponseHeader(\"Authorization\");\r",
+							"if(token) token = token.substring(token.indexOf(\" \") + 1, token.length);\r",
+							"pm.environment.set(\"jwt\", token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "a JWT token",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"<string>\",\n    \"password\": \"<string>\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "\"<string>\""
+				},
+				{
+					"name": "unexpected error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"<string>\",\n    \"password\": \"<string>\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get information about the system",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/info",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"info"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Expected response to a valid request",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"info"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"version\": \"<string>\",\n \"accVersion\": \"<string>\",\n \"metricsEnabled\": \"<boolean>\"\n}"
+				},
+				{
+					"name": "unexpected error",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"info"
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n \"code\": \"<integer>\",\n \"message\": \"<string>\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get metrics in prometheus.io compatible format.",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:9554/prometheus",
+					"host": [
+						"localhost"
+					],
+					"port": "9554",
+					"path": [
+						"prometheus"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Various metrics in prometheus compatible format",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseUrl}}/prometheus",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"prometheus"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "\"<string>\""
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"id": "baseUrl",
+			"key": "baseUrl",
+			"value": "http://localhost:8000/v1",
+			"type": "string"
+		}
+	]
+}

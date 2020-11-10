@@ -1,0 +1,19 @@
+<div *ngIf="loading" fxLayout="column" fxLayoutAlign="start center" fxFill>
+  <h2>Loading system info...</h2>
+  <mat-spinner diameter="30"></mat-spinner>
+</div>
+<div *ngIf="!loading" fxLayout="column" fxLayoutAlign="center center" fxFill>
+  <div fxLayout="column" fxLayoutAlign="start start">
+    <h3>System Information</h3>
+    <p><b>Backend version:</b> {{info.version}}</p>
+    <p><b>Metrics:</b> {{info.metricsEnabled ? 'enabled' : 'disabled'}}</p>
+    <p><b>Supported ACC server versions:</b>
+      <span *ngFor="let version of info.supportedAccVersions; let i=index">
+        {{version}}
+        <span *ngIf="i < (info.supportedAccVersions.length - 1)">, </span>
+  </span>
+    </p>
+    <p><b>Servers online:</b> {{info.activeInstances}}</p>
+  </div>
+</div>
+

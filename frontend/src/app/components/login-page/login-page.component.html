@@ -1,0 +1,35 @@
+<div fxLayoutAlign="center center" class="login-background full-page">
+  <mat-card id="login-card" fxLayout="column" fxLayoutAlign="center center">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (submit)="login()" fxLayout="column" fxLayoutAlign="center center">
+        <table>
+          <tr>
+            <td>
+              <mat-form-field>
+                <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-form-field>
+                <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+        <span class="mat-error mat-card-subtitle" [hidden]="!error">{{error}}</span>
+        <mat-card-actions>
+          <mat-spinner-button
+            type="submit"
+            [options]="loginButton">
+          </mat-spinner-button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+    <mat-card-subtitle fxFlexAlign="end end">Version: {{version}}</mat-card-subtitle>
+  </mat-card>
+</div>
