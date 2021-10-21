@@ -105,6 +105,12 @@ export class UtilityService {
         return 'Zolder 2019';
       case Track.zolder_2020:
         return 'Zolder 2020';
+      case Track.zandvoort:
+        return 'Zandvoort';
+      case Track.zandvoort_2019:
+        return 'Zandvoort 2019';
+      case Track.zandvoort_2020:
+        return 'Zandvoort 2020';
       default:
         return 'Unknown';
     }
