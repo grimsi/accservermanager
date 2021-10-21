@@ -38,7 +38,11 @@ export class ServerTableComponent implements OnInit {
     fullWidth: false,
     disabled: false,
     mode: 'indeterminate',
-    icon: Icon.edit
+    buttonIcon: {
+      fontSet: 'fa',
+      fontIcon: 'fa-heart',
+      inline: true
+    }
   };
 
   @Input()

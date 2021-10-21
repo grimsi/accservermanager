@@ -30,7 +30,7 @@ export class ServerEditDialogComponent implements OnInit {
     configuration: this.fb.group({
       udpPort: [null, [Validators.required, Validators.min(1024), Validators.max(49151)]],
       tcpPort: [null, [Validators.required, Validators.min(1024), Validators.max(49151)]],
-      maxClients: [null, [Validators.required, Validators.min(1), Validators.max(24)]]
+      maxConnections: [null, [Validators.required, Validators.min(1), Validators.max(24)]]
     }),
     settings: this.fb.group({
       serverName: [null, Validators.required],
@@ -38,6 +38,7 @@ export class ServerEditDialogComponent implements OnInit {
       adminPassword: [null, Validators.required],
       trackMedalsRequirement: [0, [Validators.required, Validators.min(0), Validators.max(3)]],
       safetyRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],
+      ignorePrematureDisconnects: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
     })
   });
 
@@ -93,7 +94,7 @@ export class ServerEditDialogComponent implements OnInit {
       configuration: {
         udpPort: this.server.configuration.udpPort,
         tcpPort: this.server.configuration.tcpPort,
-        maxClients: this.server.configuration.maxClients
+        maxConnections: this.server.configuration.maxConnections
       },
       settings: {
         serverName: this.server.settings.serverName,

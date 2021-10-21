@@ -5,4 +5,5 @@ export class SettingsDto {
   adminPassword: string;
   trackMedalsRequirement: number;
   safetyRatingRequirement: number;
+  ignorePrematureDisconnects: number;
 }

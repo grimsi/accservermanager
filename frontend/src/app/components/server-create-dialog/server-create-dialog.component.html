@@ -37,7 +37,7 @@
           </mat-form-field>
 
           <mat-form-field fxFlex="1 1 auto">
-            <input matInput type="number" placeholder="Max. clients" formControlName="maxClients"/>
+            <input matInput type="number" placeholder="Max. clients" formControlName="maxConnections"/>
           </mat-form-field>
         </div>
       </div>
@@ -67,6 +67,11 @@
           <mat-form-field fxFlex="1 1 auto">
             <input matInput type="number" placeholder="Safety Rating requirement"
                    formControlName="safetyRatingRequirement"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="IgnorePrematureDisconnects"
+                   formControlName="ignorePrematureDisconnects"/>
           </mat-form-field>
         </div>
 
