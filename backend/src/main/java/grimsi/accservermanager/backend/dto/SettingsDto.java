@@ -35,4 +35,9 @@ public class SettingsDto {
     @Min(value = -1, message = "safetyRatingRequirement has to be between -1 and 99.")
     @Max(value = 99, message = "safetyRatingRequirement has to be between -1 and 99.")
     private int safetyRatingRequirement;
+
+    @NotNull(message = "ignorePrematureDisconnects is required.")
+    @Min(value = 0, message = "ignorePrematureDisconnects has to be between 0 and 1.")
+    @Max(value = 1, message = "ignorePrematureDisconnects has to be between 0 and 1.")
+    private int ignorePrematureDisconnects;
 }

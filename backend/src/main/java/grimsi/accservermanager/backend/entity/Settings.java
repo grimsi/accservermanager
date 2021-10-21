@@ -12,4 +12,5 @@ public class Settings {
     private int trackMedalsRequirement;
     private int safetyRatingRequirement;
     private int configVersion = 1;
+    private int ignorePrematureDisconnects;
 }
