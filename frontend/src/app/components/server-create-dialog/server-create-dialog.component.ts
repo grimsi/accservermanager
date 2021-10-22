@@ -27,15 +27,23 @@ export class ServerCreateDialogComponent implements OnInit {
     configuration: this.fb.group({
       udpPort: [9600, [Validators.required, Validators.min(1024), Validators.max(49151)]],
       tcpPort: [9600, [Validators.required, Validators.min(1024), Validators.max(49151)]],
-      maxConnections: [24, [Validators.required, Validators.min(1), Validators.max(24)]]
+      maxConnections: [85, [Validators.required, Validators.min(1), Validators.max(85)]]
     }),
     settings: this.fb.group({
       serverName: [null, Validators.required],
       password: [null],
       adminPassword: [null, Validators.required],
+      carGroup: ['FreeForAll'],
       trackMedalsRequirement: [0, [Validators.required, Validators.min(0), Validators.max(3)]],
       safetyRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],
+      racecraftRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],
+      maxCarSlots: [30, [Validators.required, Validators.min(1), Validators.max(30)]],
+      isRaceLocked: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      allowAutoDQ: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      shortFormationLap: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      formationLapType: [3, [Validators.required, Validators.min(0), Validators.max(3)]],
       ignorePrematureDisconnects: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+
     })
   });
 

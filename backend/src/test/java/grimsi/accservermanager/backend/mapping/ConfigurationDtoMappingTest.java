@@ -15,7 +15,7 @@ public class ConfigurationDtoMappingTest implements MappingUnitTest {
     @Test
     public void convertEntityToDto() {
         Configuration configuration = new Configuration();
-        configuration.setMaxClients(24);
+        configuration.setMaxConnections(24);
         configuration.setTcpPort(9600);
         configuration.setUdpPort(9600);
 
@@ -27,7 +27,7 @@ public class ConfigurationDtoMappingTest implements MappingUnitTest {
     @Test
     public void convertDtoToEntity() {
         ConfigurationDto configurationDto = new ConfigurationDto();
-        configurationDto.setMaxClients(24);
+        configurationDto.setMaxConnections(24);
         configurationDto.setTcpPort(9600);
         configurationDto.setUdpPort(9600);
 
@@ -38,7 +38,7 @@ public class ConfigurationDtoMappingTest implements MappingUnitTest {
 
     private void checkMapping(Configuration configuration, ConfigurationDto configurationDto) {
         assertEquals(configuration.getConfigVersion(), configurationDto.getConfigVersion());
-        assertEquals(configuration.getMaxClients(), configurationDto.getMaxClients());
+        assertEquals(configuration.getMaxConnections(), configurationDto.getMaxConnections());
         assertEquals(configuration.getTcpPort(), configurationDto.getUdpPort());
         assertEquals(configuration.getUdpPort(), configurationDto.getUdpPort());
     }

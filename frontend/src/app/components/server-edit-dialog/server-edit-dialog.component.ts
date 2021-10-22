@@ -30,14 +30,21 @@ export class ServerEditDialogComponent implements OnInit {
     configuration: this.fb.group({
       udpPort: [null, [Validators.required, Validators.min(1024), Validators.max(49151)]],
       tcpPort: [null, [Validators.required, Validators.min(1024), Validators.max(49151)]],
-      maxConnections: [null, [Validators.required, Validators.min(1), Validators.max(24)]]
+      maxConnections: [null, [Validators.required, Validators.min(1), Validators.max(85)]]
     }),
     settings: this.fb.group({
       serverName: [null, Validators.required],
       password: [''],
       adminPassword: [null, Validators.required],
+      carGroup: [''],
       trackMedalsRequirement: [0, [Validators.required, Validators.min(0), Validators.max(3)]],
       safetyRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],
+      racecraftRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],
+      maxCarSlots: [30, [Validators.required, Validators.min(1), Validators.max(30)]],
+      isRaceLocked: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      allowAutoDQ: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      shortFormationLap: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
+      formationLapType: [3, [Validators.required, Validators.min(0), Validators.max(3)]],
       ignorePrematureDisconnects: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
     })
   });
@@ -100,8 +107,16 @@ export class ServerEditDialogComponent implements OnInit {
         serverName: this.server.settings.serverName,
         password: this.server.settings.password || '',
         adminPassword: this.server.settings.adminPassword,
+        carGroup: this.server.settings.carGroup,
         trackMedalsRequirement: this.server.settings.trackMedalsRequirement,
-        safetyRatingRequirement: this.server.settings.safetyRatingRequirement
+        safetyRatingRequirement: this.server.settings.safetyRatingRequirement,
+        racecraftRatingRequirement: this.server.settings.racecraftRatingRequirement,
+        maxCarSlots: this.server.settings.maxCarSlots,
+        isRaceLocked: this.server.settings.isRaceLocked,
+        allowAutoDQ: this.server.settings.allowAutoDQ,
+        shortFormationLap: this.server.settings.shortFormationLap,
+        formationLapType: this.server.settings.formationLapType,
+        ignorePrematureDisconnects: this.server.settings.ignorePrematureDisconnects
       }
     });
   }

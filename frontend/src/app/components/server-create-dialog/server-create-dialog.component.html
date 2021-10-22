@@ -37,7 +37,7 @@
           </mat-form-field>
 
           <mat-form-field fxFlex="1 1 auto">
-            <input matInput type="number" placeholder="Max. clients" formControlName="maxConnections"/>
+            <input matInput type="number" placeholder="Max. Connections" formControlName="maxConnections"/>
           </mat-form-field>
         </div>
       </div>
@@ -60,6 +60,12 @@
 
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="text" placeholder='"FreeForAll", "GT3", "GT4", "Cup", "ST"' formControlName="carGroup"/>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <mat-form-field fxFlex="1 1 auto">
             <input matInput type="number" placeholder="Track Medal Requirement"
                    formControlName="trackMedalsRequirement"/>
           </mat-form-field>
@@ -70,11 +76,46 @@
           </mat-form-field>
 
           <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Race Craft requirement"
+                   formControlName="racecraftRatingRequirement"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Max Slots Car"
+                   formControlName="maxCarSlots"/>
+          </mat-form-field>
+
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+        <mat-form-field fxFlex="1 1 auto">
+          <input matInput type="number" placeholder="Is Race Locked"
+                 formControlName="isRaceLocked"/>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="1 1 auto">
+          <input matInput type="number" placeholder="Allow Auto DQ"
+                 formControlName="allowAutoDQ"/>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="1 1 auto">
+          <input matInput type="number" placeholder="Short Formation Lap"
+                 formControlName="shortFormationLap"/>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="1 1 auto">
+          <input matInput type="number" placeholder="Formation Lap Type"
+                 formControlName="formationLapType"/>
+        </mat-form-field>
+
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1px">
+          <mat-form-field fxFlex="1 1 auto">
             <input matInput type="number" placeholder="IgnorePrematureDisconnects"
                    formControlName="ignorePrematureDisconnects"/>
           </mat-form-field>
-        </div>
 
+        </div>
       </div>
 
     </form>
