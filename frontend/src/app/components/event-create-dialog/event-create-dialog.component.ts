@@ -4,7 +4,6 @@ import { EventApiService } from '../../services/event-api.service';
 import { MatDialogRef } from '@angular/material';
 import { EventDto } from '../../models/dtos/EventDto';
 import { Track } from 'src/app/models/enums/Track';
-import { EventType } from '../../models/enums/EventType';
 import { UtilityService } from '../../services/utility.service';
 import { Icon } from 'src/app/models/enums/Icon';
 import { SessionType } from '../../models/enums/SessionType';
@@ -19,7 +18,6 @@ export class EventCreateDialogComponent implements OnInit {
   createEventForm = this.fb.group({
     name: [null, Validators.required],
     track: [null, Validators.required],
-    eventType: [null, Validators.required],
     preRaceWaitingTimeSeconds: [80, [Validators.required, Validators.min(0)]],
     postQualySeconds: [120, [Validators.required, Validators.min(0)]],
     postRaceSeconds: [120, [Validators.required, Validators.min(0)]],
@@ -36,7 +34,6 @@ export class EventCreateDialogComponent implements OnInit {
 
   Icon = Icon;
   trackKeys;
-  eventTypeKeys;
   sessionTypeKeys;
 
   constructor(private fb: FormBuilder,
@@ -44,7 +41,6 @@ export class EventCreateDialogComponent implements OnInit {
               private utils: UtilityService,
               public dialogRef: MatDialogRef<EventCreateDialogComponent>) {
     this.trackKeys = Object.keys(Track);
-    this.eventTypeKeys = Object.keys(EventType);
     this.sessionTypeKeys = Object.keys(SessionType);
   }
 

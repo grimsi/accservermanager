@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Track } from '../models/enums/Track';
-import { EventType } from '../models/enums/EventType';
 import { InstanceState } from '../models/enums/InstanceState';
 import { Icon } from '../models/enums/Icon';
 import { SessionType } from '../models/enums/SessionType';
@@ -116,19 +115,6 @@ export class UtilityService {
     }
   }
 
-  public eventTypeToString(eventType: EventType): string {
-    switch (eventType) {
-      case EventType.E_3h:
-        return 'Endurance 3h';
-      case EventType.E_6h:
-        return 'Endurance 6h';
-      case EventType.E_24h:
-        return 'Endurance 24h';
-      default:
-        return 'Unknown';
-    }
-  }
-
   public mapServerStateToIcon(state: InstanceState): Icon {
     switch (state) {
       case InstanceState.RUNNING:
@@ -156,7 +142,6 @@ export class UtilityService {
         return 'Unknown';
     }
   }
-
 
   public mapNumberToDay(dayOfWeekend: number): string {
     switch (dayOfWeekend) {

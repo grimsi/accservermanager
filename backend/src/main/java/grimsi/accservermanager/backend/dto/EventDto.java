@@ -1,6 +1,5 @@
 package grimsi.accservermanager.backend.dto;
 
-import grimsi.accservermanager.backend.enums.EventType;
 import grimsi.accservermanager.backend.enums.Track;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,10 +30,6 @@ public class EventDto {
     @NotNull(message = "track is required.")
     @Valid
     private Track track;
-
-    @NotNull(message = "eventType is required.")
-    @Valid
-    private EventType eventType;
 
     @NotNull(message = "preRaceWaitingTimeSeconds is required.")
     private int preRaceWaitingTimeSeconds;

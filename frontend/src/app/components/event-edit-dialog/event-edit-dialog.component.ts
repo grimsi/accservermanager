@@ -5,7 +5,6 @@ import { EventApiService } from '../../services/event-api.service';
 import { UtilityService } from '../../services/utility.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Track } from '../../models/enums/Track';
-import { EventType } from '../../models/enums/EventType';
 import { SessionType } from '../../models/enums/SessionType';
 import { EventDto } from '../../models/dtos/EventDto';
 import { SessionDto } from '../../models/dtos/SessionDto';
@@ -21,7 +20,6 @@ export class EventEditDialogComponent implements OnInit {
     id: [{value: null, disabled: true}, Validators.required],
     name: [null, Validators.required],
     track: [null, Validators.required],
-    eventType: [null, Validators.required],
     preRaceWaitingTimeSeconds: [null, [Validators.required, Validators.min(0)]],
     sessionOverTimeSeconds: [null, [Validators.required, Validators.min(0)]],
     postQualySeconds: [null, [Validators.required, Validators.min(0)]],
@@ -38,7 +36,6 @@ export class EventEditDialogComponent implements OnInit {
 
   Icon = Icon;
   trackKeys;
-  eventTypeKeys;
   sessionTypeKeys;
   event;
 
@@ -48,7 +45,6 @@ export class EventEditDialogComponent implements OnInit {
               public dialogRef: MatDialogRef<EventEditDialogComponent>,
               @Inject(MAT_DIALOG_DATA) data) {
     this.trackKeys = Object.keys(Track);
-    this.eventTypeKeys = Object.keys(EventType);
     this.sessionTypeKeys = Object.keys(SessionType);
     this.event = data.event;
   }
@@ -63,7 +59,6 @@ export class EventEditDialogComponent implements OnInit {
       id: this.event.id,
       name: this.event.name,
       track: this.event.track,
-      eventType: this.event.eventType,
       preRaceWaitingTimeSeconds: this.event.preRaceWaitingTimeSeconds,
       postQualySeconds: this.event.postQualySeconds,
       postRaceSeconds: this.event.postRaceSeconds,

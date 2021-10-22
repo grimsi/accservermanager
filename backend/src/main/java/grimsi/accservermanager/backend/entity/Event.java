@@ -1,6 +1,5 @@
 package grimsi.accservermanager.backend.entity;
 
-import grimsi.accservermanager.backend.enums.EventType;
 import grimsi.accservermanager.backend.enums.Track;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,6 @@ public class Event {
     private String name;
 
     private Track track;
-    private EventType eventType;
     private int preRaceWaitingTimeSeconds;
     private int sessionOverTimeSeconds;
     private int postQualySeconds;
