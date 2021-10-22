@@ -40,6 +40,30 @@
 
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
       <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Post Qualy Seconds (in s)"
+               formControlName="postQualySeconds"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Post Race Seconds (in s)"
+               formControlName="postRaceSeconds"/>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Simracer Weather Conditions"
+               formControlName="simracerWeatherConditions"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Is Fixed Condition Qualification"
+               formControlName="isFixedConditionQualification"/>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
         <input matInput type="number" placeholder="Ambient temperature (in °C)" formControlName="ambientTemp"/>
       </mat-form-field>
 

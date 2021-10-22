@@ -20,13 +20,17 @@ export class EventCreateDialogComponent implements OnInit {
     name: [null, Validators.required],
     track: [null, Validators.required],
     eventType: [null, Validators.required],
-    preRaceWaitingTimeSeconds: [null, [Validators.required, Validators.min(0)]],
-    sessionOverTimeSeconds: [null, [Validators.required, Validators.min(0)]],
+    preRaceWaitingTimeSeconds: [80, [Validators.required, Validators.min(0)]],
+    postQualySeconds: [120, [Validators.required, Validators.min(0)]],
+    postRaceSeconds: [120, [Validators.required, Validators.min(0)]],
+    sessionOverTimeSeconds: [120, [Validators.required, Validators.min(0)]],
     ambientTemp: [null, [Validators.required, Validators.min(-100), Validators.max(100)]],
     trackTemp: [null, [Validators.required, Validators.min(-100), Validators.max(100)]],
     cloudLevel: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
     rain: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
     weatherRandomness: [null, [Validators.required, Validators.min(0), Validators.max(10)]],
+    simracerWeatherConditions: [null, [Validators.required, Validators.min(0)]],
+    isFixedConditionQualification: [null, [Validators.required, Validators.min(0)]],
     sessions: this.fb.array([], [Validators.required, Validators.minLength(1)])
   });
 

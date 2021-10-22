@@ -24,11 +24,15 @@ export class EventEditDialogComponent implements OnInit {
     eventType: [null, Validators.required],
     preRaceWaitingTimeSeconds: [null, [Validators.required, Validators.min(0)]],
     sessionOverTimeSeconds: [null, [Validators.required, Validators.min(0)]],
+    postQualySeconds: [null, [Validators.required, Validators.min(0)]],
+    postRaceSeconds: [null, [Validators.required, Validators.min(0)]],
     ambientTemp: [null, [Validators.required, Validators.min(-100), Validators.max(100)]],
     trackTemp: [null, [Validators.required, Validators.min(-100), Validators.max(100)]],
     cloudLevel: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
     rain: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
     weatherRandomness: [null, [Validators.required, Validators.min(0), Validators.max(10)]],
+    simracerWeatherConditions: [null, [Validators.required, Validators.min(0)]],
+    isFixedConditionQualification: [null, [Validators.required, Validators.min(0)]],
     sessions: this.fb.array([], [Validators.required, Validators.minLength(1)])
   });
 
@@ -61,12 +65,16 @@ export class EventEditDialogComponent implements OnInit {
       track: this.event.track,
       eventType: this.event.eventType,
       preRaceWaitingTimeSeconds: this.event.preRaceWaitingTimeSeconds,
+      postQualySeconds: this.event.postQualySeconds,
+      postRaceSeconds: this.event.postRaceSeconds,
       sessionOverTimeSeconds: this.event.sessionOverTimeSeconds,
       ambientTemp: this.event.ambientTemp,
       trackTemp: this.event.trackTemp,
       cloudLevel: this.event.cloudLevel,
       rain: this.event.rain,
-      weatherRandomness: this.event.weatherRandomness
+      weatherRandomness: this.event.weatherRandomness,
+      simracerWeatherConditions: this.event.simracerWeatherConditions,
+      isFixedConditionQualification : this.event.isFixedConditionQualification
     });
 
     this.event.sessions.forEach((session: SessionDto) => {

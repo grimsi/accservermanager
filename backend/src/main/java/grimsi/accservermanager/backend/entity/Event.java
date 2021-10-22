@@ -25,11 +25,15 @@ public class Event {
     private EventType eventType;
     private int preRaceWaitingTimeSeconds;
     private int sessionOverTimeSeconds;
+    private int postQualySeconds;
+    private int postRaceSeconds;
     private int ambientTemp;
     private int trackTemp;
     private BigDecimal cloudLevel;
     private BigDecimal rain;
     private BigDecimal weatherRandomness;
+    private int simracerWeatherConditions;
+    private int isFixedConditionQualification;
     private List<Session> sessions;
     private int configVersion = 1;
 }

@@ -42,6 +42,12 @@ public class EventDto {
     @NotNull(message = "sessionOverTimeSeconds is required.")
     private int sessionOverTimeSeconds;
 
+    @NotNull(message = "postQualySeconds is required.")
+    private int postQualySeconds;
+
+    @NotNull(message = "postQualySeconds is required.")
+    private int postRaceSeconds;
+
     @NotNull(message = "ambientTemp is required.")
     @Min(value = -100, message = "ambientTemp has to be between -100 and 100.")
     @Max(value = 100, message = "ambientTemp has to be between -100 and 100.")
@@ -66,6 +72,14 @@ public class EventDto {
     @DecimalMin(value = "0", message = "weatherRandomness has to be between 0 and 10.")
     @DecimalMax(value = "10", message = "weatherRandomness has to be between 0 and 10.")
     private BigDecimal weatherRandomness;
+
+    @DecimalMin(value = "0", message = "simracerWeatherConditions has to be between 0 and 3.")
+    @DecimalMax(value = "3", message = "simracerWeatherConditions has to be between 0 and 3.")
+    private int simracerWeatherConditions;
+
+    @DecimalMin(value = "0", message = "isFixedConditionQualification has to be between 0 and 1.")
+    @DecimalMax(value = "1", message = "isFixedConditionQualification has to be between 0 and 1.")
+    private int isFixedConditionQualification;
 
     @NotNull(message = "sessions is required.")
     @Valid
