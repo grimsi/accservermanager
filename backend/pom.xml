@@ -1,11 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>grimsi.accservermanager</groupId>
     <artifactId>backend</artifactId>
     <packaging>jar</packaging>
     <name>backend</name>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -104,7 +104,7 @@
             <artifactId>validation-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.0.15.Final</version>
         </dependency>

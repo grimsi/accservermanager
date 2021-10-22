@@ -29,6 +29,6 @@ public class ConfigurationDto {
 
     @NotNull(message = "maxConnections is required.")
     @Min(value = 1, message = "maxConnections has to be between 1 and 24.")
-    @Max(value = 24, message = "maxConnections has to be between 1 and 24.")
+    @Max(value = 85, message = "maxConnections has to be between 1 and 24.")
     private int maxConnections;
 }
