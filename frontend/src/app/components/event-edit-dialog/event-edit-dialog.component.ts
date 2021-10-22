@@ -91,7 +91,7 @@ export class EventEditDialogComponent implements OnInit {
     return this.fb.group(
       {
         hourOfDay: [session.hourOfDay, [Validators.required, Validators.min(0), Validators.max(23)]],
-        dayOfWeekend: [session.dayOfWeekend, [Validators.required, Validators.min(0), Validators.max(2)]],
+        dayOfWeekend: [session.dayOfWeekend, [Validators.required, Validators.min(1), Validators.max(3)]],
         timeMultiplier: [session.timeMultiplier, [Validators.required, Validators.min(0.1)]],
         sessionType: [session.sessionType, [Validators.required]],
         sessionDurationMinutes: [session.sessionDurationMinutes, [Validators.required, Validators.min(1)]]
@@ -102,7 +102,7 @@ export class EventEditDialogComponent implements OnInit {
   addSession() {
     const sessionForm: FormGroup = this.fb.group({
       hourOfDay: [null, [Validators.required, Validators.min(0), Validators.max(23)]],
-      dayOfWeekend: [null, [Validators.required, Validators.min(0), Validators.max(2)]],
+      dayOfWeekend: [null, [Validators.required, Validators.min(1), Validators.max(3)]],
       timeMultiplier: [null, [Validators.required, Validators.min(0.1)]],
       sessionType: [null, [Validators.required]],
       sessionDurationMinutes: [null, [Validators.required, Validators.min(1)]]

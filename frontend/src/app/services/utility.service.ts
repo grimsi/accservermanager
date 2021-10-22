@@ -160,11 +160,11 @@ export class UtilityService {
 
   public mapNumberToDay(dayOfWeekend: number): string {
     switch (dayOfWeekend) {
-      case 0:
-        return 'Friday';
       case 1:
-        return 'Saturday';
+        return 'Friday';
       case 2:
+        return 'Saturday';
+      case 3:
         return 'Sunday';
       default:
         return 'Unknown';

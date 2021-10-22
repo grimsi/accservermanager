@@ -98,7 +98,7 @@
 
           <mat-form-field>
             <mat-select placeholder="Day" formControlName="dayOfWeekend">
-              <mat-option *ngFor="let day of [0,1,2]" [value]="day">
+              <mat-option *ngFor="let day of [1,2,3]" [value]="day">
                 {{utils.mapNumberToDay(day)}}
               </mat-option>
             </mat-select>
