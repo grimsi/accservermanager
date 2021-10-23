@@ -56,7 +56,7 @@ export class EventCreateDialogComponent implements OnInit {
     const sessionForm: FormGroup = this.fb.group({
       hourOfDay: [null, [Validators.required, Validators.min(0), Validators.max(23)]],
       dayOfWeekend: [null, [Validators.required, Validators.min(1), Validators.max(3)]],
-      timeMultiplier: [null, [Validators.required, Validators.min(0.1)]],
+      timeMultiplier: [null, [Validators.required, Validators.min(0), Validators.max(24)]],
       sessionType: [null, [Validators.required]],
       sessionDurationMinutes: [null, [Validators.required, Validators.min(1)]]
     });

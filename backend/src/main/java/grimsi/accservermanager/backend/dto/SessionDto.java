@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -30,8 +29,9 @@ public class SessionDto {
     private int dayOfWeekend;
 
     @NotNull(message = "timeMultiplier is required.")
-    @DecimalMin(value = "0.1", message = "timeMultiplier has to be at least 0.1.")
-    private BigDecimal timeMultiplier;
+    @Min(value = 0, message = "timeMultiplier has to be between 0 and 24.")
+    @Max(value = 24, message = "timeMultiplier has to be between 0 and 24")
+    private int timeMultiplier;
 
     @NotNull(message = "sessionType is required.")
     @Valid
