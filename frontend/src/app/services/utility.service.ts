@@ -15,23 +15,23 @@ export class UtilityService {
   public trackEnumToString(track: Track): string {
     switch (track) {
       case Track.barcelona:
-        return 'barcelona';
+        return 'Barcelona';
       case Track.barcelona_2019:
-        return 'barcelona 2019';
+        return 'Barcelona 2019';
       case Track.barcelona_2020:
-        return 'barcelona 2020';
+        return 'Barcelona 2020';
       case Track.brands_hatch:
-        return 'brands hatch';
+        return 'Brands hatch';
       case Track.brands_hatch_2019:
-        return 'brands hatch 2019';
+        return 'Brands hatch 2019';
       case Track.brands_hatch_2020:
-        return 'brands hatch 2020';
+        return 'Brands hatch 2020';
       case Track.donington_2019:
-        return 'donington 2019';
+        return 'Donington 2019';
       case Track.donington_2020:
-        return 'donington 2020';
+        return 'Donington 2020';
       case Track.imola_2020:
-        return 'imola 2020';
+        return 'Imola 2020';
       case Track.kyalami_2019:
         return 'kyalami 2019';
       case Track.kyalami_2020:
@@ -49,25 +49,25 @@ export class UtilityService {
       case Track.oulton_park_2020:
         return 'Oulton Parck 2020';
       case Track.silverstone:
-        return 'silverstone';
+        return 'Silverstone';
       case Track.silverstone_2019:
-        return 'silverstone 2019';
+        return 'Silverstone 2019';
       case Track.silverstone_2020:
-        return 'silverstone 2020';
+        return 'Silverstone 2020';
       case Track.suzuka_2019:
-        return 'silverstone 2019';
+        return 'Suzuka 2019';
       case Track.suzuka_2020:
-        return 'silverstone 2020';
+        return 'Suzuka 2020';
       case Track.snetterton_2019:
-        return 'snetterton 2019';
+        return 'Snetterton 2019';
       case Track.snetterton_2020:
-        return 'snetterton 2020';
+        return 'Snetterton 2020';
       case Track.spa:
-        return 'spa';
+        return 'Spa';
       case Track.spa_2019:
-        return 'spa 2019';
+        return 'Spa 2019';
       case Track.spa_2020:
-        return 'spa 2020';
+        return 'Spa 2020';
       case Track.nurburgring:
         return 'Nürburgring';
       case Track.nurburgring_2019:
