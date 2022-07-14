@@ -7,7 +7,6 @@ import grimsi.accservermanager.backend.interfaces.MappingUnitTest;
 import org.junit.Test;
 import org.modelmapper.ModelMapper;
 
-import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,7 +19,7 @@ public class SessionDtoMappingTest implements MappingUnitTest {
         Session session = new Session();
         session.setHourOfDay(12);
         session.setDayOfWeekend(1);
-        session.setTimeMultiplier(new BigDecimal("1"));
+        session.setTimeMultiplier(0);
         session.setSessionType(SessionType.P);
         session.setSessionDurationMinutes(20);
 
@@ -34,7 +33,7 @@ public class SessionDtoMappingTest implements MappingUnitTest {
         SessionDto sessionDto = new SessionDto();
         sessionDto.setHourOfDay(12);
         sessionDto.setDayOfWeekend(1);
-        sessionDto.setTimeMultiplier(new BigDecimal("1"));
+        sessionDto.setTimeMultiplier(0);
         sessionDto.setSessionType(SessionType.P);
         sessionDto.setSessionDurationMinutes(20);
 

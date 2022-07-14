@@ -14,14 +14,6 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-select placeholder="Event Type" formControlName="eventType">
-        <mat-option *ngFor="let eventType of eventTypeKeys" [value]="eventType">
-          {{utils.eventTypeToString(eventType)}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
     <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
       <mat-form-field fxFlex="1 1 auto">
         <input matInput type="number" placeholder="Pre-race waiting time (in s)"
@@ -31,6 +23,30 @@
       <mat-form-field fxFlex="1 1 auto">
         <input matInput type="number" placeholder="Session-over waiting time (in s)"
                formControlName="sessionOverTimeSeconds"/>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Post Qualy Seconds (in s)"
+               formControlName="postQualySeconds"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Post Race Seconds (in s)"
+               formControlName="postRaceSeconds"/>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Simracer Weather Conditions"
+               formControlName="simracerWeatherConditions"/>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="1 1 auto">
+        <input matInput type="number" placeholder="Is Fixed Condition Qualification"
+               formControlName="isFixedConditionQualification"/>
       </mat-form-field>
     </div>
 
@@ -74,7 +90,7 @@
 
           <mat-form-field>
             <mat-select placeholder="Day" formControlName="dayOfWeekend">
-              <mat-option *ngFor="let day of [0,1,2]" [value]="day">
+              <mat-option *ngFor="let day of [1,2,3]" [value]="day">
                 {{utils.mapNumberToDay(day)}}
               </mat-option>
             </mat-select>

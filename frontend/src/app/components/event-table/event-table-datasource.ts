@@ -72,8 +72,6 @@ export class EventTableDataSource extends DataSource<EventDto> {
           return compare(a.name, b.name, isAsc);
         case 'track':
           return compare(a.track, b.track, isAsc);
-        case 'type':
-          return compare(a.eventType, b.eventType, isAsc);
         default:
           return 0;
       }

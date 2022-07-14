@@ -2,7 +2,6 @@ package grimsi.accservermanager.backend.mapping;
 
 import grimsi.accservermanager.backend.dto.EventDto;
 import grimsi.accservermanager.backend.entity.Event;
-import grimsi.accservermanager.backend.enums.EventType;
 import grimsi.accservermanager.backend.enums.Track;
 import grimsi.accservermanager.backend.interfaces.MappingUnitTest;
 import org.junit.Test;
@@ -23,7 +22,6 @@ public class EventDtoMappingTest implements MappingUnitTest {
         event.setId("123");
         event.setName("testEvent");
         event.setTrack(Track.hungaroring);
-        event.setEventType(EventType.E_3h);
         event.setPreRaceWaitingTimeSeconds(30);
         event.setSessionOverTimeSeconds(30);
         event.setAmbientTemp(25);
@@ -44,7 +42,6 @@ public class EventDtoMappingTest implements MappingUnitTest {
         eventDto.setId("123");
         eventDto.setName("testEvent");
         eventDto.setTrack(Track.hungaroring);
-        eventDto.setEventType(EventType.E_3h);
         eventDto.setPreRaceWaitingTimeSeconds(30);
         eventDto.setSessionOverTimeSeconds(30);
         eventDto.setAmbientTemp(25);
@@ -64,7 +61,6 @@ public class EventDtoMappingTest implements MappingUnitTest {
         assertEquals(event.getId(), eventDto.getId());
         assertEquals(event.getName(), eventDto.getName());
         assertEquals(event.getTrack(), eventDto.getTrack());
-        assertEquals(event.getEventType(), eventDto.getEventType());
         assertEquals(event.getPreRaceWaitingTimeSeconds(), eventDto.getPreRaceWaitingTimeSeconds());
         assertEquals(event.getSessionOverTimeSeconds(), eventDto.getSessionOverTimeSeconds());
         assertEquals(event.getAmbientTemp(), eventDto.getAmbientTemp());

@@ -21,6 +21,12 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         settings.setAdminPassword("testAdminPassword");
         settings.setTrackMedalsRequirement(0);
         settings.setSafetyRatingRequirement(0);
+        settings.setRacecraftRatingRequirement(0);
+        settings.setAllowAutoDQ(0);
+        settings.setIsRaceLocked(0);
+        settings.setShortFormationLap(0);
+        settings.setMaxCarSlots(0);
+        settings.setIgnorePrematureDisconnects(0);
 
         SettingsDto settingsDto = modelMapper.map(settings, SettingsDto.class);
 
@@ -35,6 +41,12 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         settingsDto.setAdminPassword("testAdminPassword");
         settingsDto.setTrackMedalsRequirement(0);
         settingsDto.setSafetyRatingRequirement(0);
+        settingsDto.setRacecraftRatingRequirement(0);
+        settingsDto.setAllowAutoDQ(0);
+        settingsDto.setIsRaceLocked(0);
+        settingsDto.setShortFormationLap(0);
+        settingsDto.setMaxCarSlots(0);
+        settingsDto.setIgnorePrematureDisconnects(0);
 
         Settings settings = modelMapper.map(settingsDto, Settings.class);
 
@@ -48,5 +60,11 @@ public class SettingsDtoMappingTest implements MappingUnitTest {
         assertEquals(settings.getAdminPassword(), settingsDto.getAdminPassword());
         assertEquals(settings.getTrackMedalsRequirement(), settingsDto.getTrackMedalsRequirement());
         assertEquals(settings.getSafetyRatingRequirement(), settingsDto.getSafetyRatingRequirement());
+        assertEquals(settings.getRacecraftRatingRequirement(), settingsDto.getRacecraftRatingRequirement());
+        assertEquals(settings.getAllowAutoDQ(), settingsDto.getAllowAutoDQ());
+        assertEquals(settings.getIsRaceLocked(), settingsDto.getIsRaceLocked());
+        assertEquals(settings.getFormationLapType(), settingsDto.getFormationLapType());
+        assertEquals(settings.getMaxCarSlots(), settingsDto.getMaxCarSlots());
+        assertEquals(settings.getIgnorePrematureDisconnects(),settingsDto.getIgnorePrematureDisconnects());
     }
 }

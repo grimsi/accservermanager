@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Track } from '../models/enums/Track';
-import { EventType } from '../models/enums/EventType';
 import { InstanceState } from '../models/enums/InstanceState';
 import { Icon } from '../models/enums/Icon';
 import { SessionType } from '../models/enums/SessionType';
@@ -15,31 +14,102 @@ export class UtilityService {
 
   public trackEnumToString(track: Track): string {
     switch (track) {
+      case Track.barcelona:
+        return 'Barcelona';
+      case Track.barcelona_2019:
+        return 'Barcelona 2019';
+      case Track.barcelona_2020:
+        return 'Barcelona 2020';
+      case Track.brands_hatch:
+        return 'Brands hatch';
+      case Track.brands_hatch_2019:
+        return 'Brands hatch 2019';
+      case Track.brands_hatch_2020:
+        return 'Brands hatch 2020';
+      case Track.donington_2019:
+        return 'Donington 2019';
+      case Track.donington_2020:
+        return 'Donington 2020';
+      case Track.imola_2020:
+        return 'Imola 2020';
+      case Track.kyalami_2019:
+        return 'kyalami 2019';
+      case Track.kyalami_2020:
+        return 'kyalami 2020';
+      case Track.laguna_seca_2019:
+        return 'Laguna seca 2019';
+      case Track.laguna_seca_2020:
+        return 'Laguna seca 2020';
+      case Track.mount_panorama_2019:
+        return 'Mount panorama 2019';
+      case Track.mount_panorama_2020:
+        return 'Mount panorama  2020';
+      case Track.oulton_park_2019:
+        return 'Oulton Parck 2019';
+      case Track.oulton_park_2020:
+        return 'Oulton Parck 2020';
+      case Track.silverstone:
+        return 'Silverstone';
+      case Track.silverstone_2019:
+        return 'Silverstone 2019';
+      case Track.silverstone_2020:
+        return 'Silverstone 2020';
+      case Track.suzuka_2019:
+        return 'Suzuka 2019';
+      case Track.suzuka_2020:
+        return 'Suzuka 2020';
+      case Track.snetterton_2019:
+        return 'Snetterton 2019';
+      case Track.snetterton_2020:
+        return 'Snetterton 2020';
+      case Track.spa:
+        return 'Spa';
+      case Track.spa_2019:
+        return 'Spa 2019';
+      case Track.spa_2020:
+        return 'Spa 2020';
       case Track.nurburgring:
         return 'Nürburgring';
+      case Track.nurburgring_2019:
+        return 'Nürburgring 2019';
+      case Track.nurburgring_2020:
+        return 'Nürburgring 2020';
       case Track.hungaroring:
         return 'Hungaroring';
+      case Track.hungaroring_2019:
+        return 'Hungaroring 2019';
+      case Track.hungaroring_2020:
+        return 'Hungaroring_2020';
       case Track.misano:
         return 'Misano';
+      case Track.misano_2019:
+        return 'Misano 2019';
+      case Track.misano_2020:
+        return 'Misano 2020';
       case Track.monza:
         return 'Monza';
+      case Track.monza_2019:
+        return 'Monza 2019';
+      case Track.monza_2020:
+        return 'Monza 2020';
       case Track.paul_ricard:
         return 'Paul Ricard';
+      case Track.paul_ricard_2019:
+        return 'Paul Ricard 2019';
+      case Track.paul_ricard_2020:
+        return 'Paul Ricard 2020';
       case Track.zolder:
         return 'Zolder';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  public eventTypeToString(eventType: EventType): string {
-    switch (eventType) {
-      case EventType.E_3h:
-        return 'Endurance 3h';
-      case EventType.E_6h:
-        return 'Endurance 6h';
-      case EventType.E_24h:
-        return 'Endurance 24h';
+      case Track.zolder_2019:
+        return 'Zolder 2019';
+      case Track.zolder_2020:
+        return 'Zolder 2020';
+      case Track.zandvoort:
+        return 'Zandvoort';
+      case Track.zandvoort_2019:
+        return 'Zandvoort 2019';
+      case Track.zandvoort_2020:
+        return 'Zandvoort 2020';
       default:
         return 'Unknown';
     }
@@ -73,14 +143,13 @@ export class UtilityService {
     }
   }
 
-
   public mapNumberToDay(dayOfWeekend: number): string {
     switch (dayOfWeekend) {
-      case 0:
-        return 'Friday';
       case 1:
-        return 'Saturday';
+        return 'Friday';
       case 2:
+        return 'Saturday';
+      case 3:
         return 'Sunday';
       default:
         return 'Unknown';

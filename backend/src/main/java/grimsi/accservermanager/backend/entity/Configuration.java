@@ -8,6 +8,6 @@ import lombok.Setter;
 public class Configuration {
     private int udpPort;
     private int tcpPort;
-    private int maxClients;
+    private int maxConnections;
     private int configVersion = 1;
 }

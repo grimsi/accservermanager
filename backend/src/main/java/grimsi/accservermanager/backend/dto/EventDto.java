@@ -1,6 +1,5 @@
 package grimsi.accservermanager.backend.dto;
 
-import grimsi.accservermanager.backend.enums.EventType;
 import grimsi.accservermanager.backend.enums.Track;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,15 +31,17 @@ public class EventDto {
     @Valid
     private Track track;
 
-    @NotNull(message = "eventType is required.")
-    @Valid
-    private EventType eventType;
-
     @NotNull(message = "preRaceWaitingTimeSeconds is required.")
     private int preRaceWaitingTimeSeconds;
 
     @NotNull(message = "sessionOverTimeSeconds is required.")
     private int sessionOverTimeSeconds;
+
+    @NotNull(message = "postQualySeconds is required.")
+    private int postQualySeconds;
+
+    @NotNull(message = "postQualySeconds is required.")
+    private int postRaceSeconds;
 
     @NotNull(message = "ambientTemp is required.")
     @Min(value = -100, message = "ambientTemp has to be between -100 and 100.")
@@ -66,6 +67,14 @@ public class EventDto {
     @DecimalMin(value = "0", message = "weatherRandomness has to be between 0 and 10.")
     @DecimalMax(value = "10", message = "weatherRandomness has to be between 0 and 10.")
     private BigDecimal weatherRandomness;
+
+    @DecimalMin(value = "0", message = "simracerWeatherConditions has to be between 0 and 3.")
+    @DecimalMax(value = "3", message = "simracerWeatherConditions has to be between 0 and 3.")
+    private int simracerWeatherConditions;
+
+    @DecimalMin(value = "0", message = "isFixedConditionQualification has to be between 0 and 1.")
+    @DecimalMax(value = "1", message = "isFixedConditionQualification has to be between 0 and 1.")
+    private int isFixedConditionQualification;
 
     @NotNull(message = "sessions is required.")
     @Valid

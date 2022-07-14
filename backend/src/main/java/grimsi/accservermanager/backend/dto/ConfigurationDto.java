@@ -27,8 +27,8 @@ public class ConfigurationDto {
     @Max(value = 49151, message = "tcpPort has to be between 1024 and 49151.")
     private int tcpPort;
 
-    @NotNull(message = "maxClients is required.")
-    @Min(value = 1, message = "maxClients has to be between 1 and 24.")
-    @Max(value = 24, message = "maxClients has to be between 1 and 24.")
-    private int maxClients;
+    @NotNull(message = "maxConnections is required.")
+    @Min(value = 1, message = "maxConnections has to be between 1 and 24.")
+    @Max(value = 85, message = "maxConnections has to be between 1 and 24.")
+    private int maxConnections;
 }

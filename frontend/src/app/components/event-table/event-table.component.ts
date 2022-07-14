@@ -29,7 +29,7 @@ export class EventTableComponent implements OnInit {
 
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['name', 'track', 'type', 'managementButtons'];
+  displayedColumns = ['name', 'track', 'managementButtons'];
 
   ngOnInit() {
     this.dataSource = new EventTableDataSource(this.paginator, this.sort, this.data);
