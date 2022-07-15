@@ -27,12 +27,17 @@ export class ServerCreateDialogComponent implements OnInit {
     configuration: this.fb.group({
       udpPort: [9600, [Validators.required, Validators.min(1024), Validators.max(49151)]],
       tcpPort: [9600, [Validators.required, Validators.min(1024), Validators.max(49151)]],
-      maxConnections: [85, [Validators.required, Validators.min(1), Validators.max(85)]]
+      maxConnections: [85, [Validators.required, Validators.min(1), Validators.max(85)]],
+      lanDiscovery: [0, Validators.required],
+      registerToLobby: [1, Validators.required],
+      publicIP: [null]
+
     }),
     settings: this.fb.group({
       serverName: [null, Validators.required],
       password: [null],
       adminPassword: [null, Validators.required],
+      spectatorPassword: [''],
       carGroup: ['FreeForAll'],
       trackMedalsRequirement: [0, [Validators.required, Validators.min(0), Validators.max(3)]],
       safetyRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],

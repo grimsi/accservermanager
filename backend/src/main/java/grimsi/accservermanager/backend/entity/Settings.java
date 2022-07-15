@@ -9,6 +9,7 @@ public class Settings {
     private String serverName;
     private String password;
     private String adminPassword;
+    private String spectatorPassword;
     private String carGroup;
     private int trackMedalsRequirement;
     private int safetyRatingRequirement;

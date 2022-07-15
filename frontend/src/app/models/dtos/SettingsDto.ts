@@ -3,6 +3,7 @@ export class SettingsDto {
   serverName: string;
   password: string;
   adminPassword: string;
+  spectatorPassword: string;
   carGroup: string;
   trackMedalsRequirement: number;
   safetyRatingRequirement: number;

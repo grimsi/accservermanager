@@ -30,12 +30,16 @@ export class ServerEditDialogComponent implements OnInit {
     configuration: this.fb.group({
       udpPort: [null, [Validators.required, Validators.min(1024), Validators.max(49151)]],
       tcpPort: [null, [Validators.required, Validators.min(1024), Validators.max(49151)]],
-      maxConnections: [null, [Validators.required, Validators.min(1), Validators.max(85)]]
+      maxConnections: [null, [Validators.required, Validators.min(1), Validators.max(85)]],
+      lanDiscovery: [0, Validators.required],
+      registerToLobby: [1, Validators.required],
+      publicIP: [null]
     }),
     settings: this.fb.group({
       serverName: [null, Validators.required],
       password: [''],
       adminPassword: [null, Validators.required],
+      spectatorPassword: [''],
       carGroup: [''],
       trackMedalsRequirement: [0, [Validators.required, Validators.min(0), Validators.max(3)]],
       safetyRatingRequirement: [-1, [Validators.required, Validators.min(-1), Validators.max(99)]],
@@ -101,12 +105,16 @@ export class ServerEditDialogComponent implements OnInit {
       configuration: {
         udpPort: this.server.configuration.udpPort,
         tcpPort: this.server.configuration.tcpPort,
-        maxConnections: this.server.configuration.maxConnections
+        maxConnections: this.server.configuration.maxConnections,
+        lanDiscovery: this.server.configuration.lanDiscovery,
+        registerToLobby: this.server.configuration.registerToLobby,
+        publicIP: this.server.configuration.publicIP || ''
       },
       settings: {
         serverName: this.server.settings.serverName,
         password: this.server.settings.password || '',
         adminPassword: this.server.settings.adminPassword,
+        spectatorPassword: this.server.settings.spectatorPassword,
         carGroup: this.server.settings.carGroup,
         trackMedalsRequirement: this.server.settings.trackMedalsRequirement,
         safetyRatingRequirement: this.server.settings.safetyRatingRequirement,

@@ -29,6 +29,7 @@
     "mat-progress-buttons": "^8.0.3",
     "ng-event-source": "^1.0.14",
     "rxjs": "~6.3.3",
+    "sass": "^1.53.0",
     "tslib": "^1.14.1",
     "zone.js": "~0.8.26"
   },
