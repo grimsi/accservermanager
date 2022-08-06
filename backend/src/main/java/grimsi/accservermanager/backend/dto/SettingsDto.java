@@ -26,6 +26,8 @@ public class SettingsDto {
     @NotBlank(message = "adminPassword is required.")
     private String adminPassword;
 
+    private String spectatorPassword;
+
     private String carGroup;
 
     @NotNull(message = "trackMedalsRequirement is required.")

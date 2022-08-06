@@ -40,6 +40,19 @@
             <input matInput type="number" placeholder="Max. Connections" formControlName="maxConnections"/>
           </mat-form-field>
         </div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Lan Discorvey" formControlName="lanDiscovery"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Register to Lobby" formControlName="registerToLobby"/>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="1 1 auto">
+            <input matInput type="number" placeholder="Public IP" formControlName="publicIP"/>
+          </mat-form-field>
+        </div>
       </div>
 
       <div formGroupName="settings" fxLayout="column" fxLayoutAlign="space-evenly stretch">
@@ -58,9 +71,13 @@
           <input matInput type="password" placeholder="Server admin password" formControlName="adminPassword"/>
         </mat-form-field>
 
+        <mat-form-field>
+          <input matInput type="password" placeholder="Server Spectator password" formControlName="spectatorPassword"/>
+        </mat-form-field>
+
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
           <mat-form-field fxFlex="1 1 auto">
-            <input matInput type="text" placeholder='"FreeForAll", "GT3", "GT4", "Cup", "ST"' formControlName="carGroup"/>
+            <input matInput type="text" placeholder='"FreeForAll", "GT3", "GT4", "GTC", "TCX"' formControlName="carGroup"/>
           </mat-form-field>
         </div>
 

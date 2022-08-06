@@ -24,8 +24,8 @@ export class EventCreateDialogComponent implements OnInit {
     sessionOverTimeSeconds: [120, [Validators.required, Validators.min(0)]],
     ambientTemp: [null, [Validators.required, Validators.min(-100), Validators.max(100)]],
     trackTemp: [null, [Validators.required, Validators.min(-100), Validators.max(100)]],
-    cloudLevel: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
-    rain: [null, [Validators.required, Validators.min(0), Validators.max(1)]],
+    cloudLevel: [0.2, [Validators.required, Validators.min(0), Validators.max(1)]],
+    rain: [0, [Validators.required, Validators.min(0), Validators.max(1)]],
     weatherRandomness: [0, [Validators.required, Validators.min(0), Validators.max(10)]],
     simracerWeatherConditions: [0, [Validators.required, Validators.min(0)]],
     isFixedConditionQualification: [0, [Validators.required, Validators.min(0)]],
@@ -54,11 +54,11 @@ export class EventCreateDialogComponent implements OnInit {
 
   addSession() {
     const sessionForm: FormGroup = this.fb.group({
-      hourOfDay: [null, [Validators.required, Validators.min(0), Validators.max(23)]],
-      dayOfWeekend: [null, [Validators.required, Validators.min(1), Validators.max(3)]],
-      timeMultiplier: [null, [Validators.required, Validators.min(0), Validators.max(24)]],
+      hourOfDay: [15, [Validators.required, Validators.min(0), Validators.max(23)]],
+      dayOfWeekend: [3, [Validators.required, Validators.min(1), Validators.max(3)]],
+      timeMultiplier: [1, [Validators.required, Validators.min(0), Validators.max(24)]],
       sessionType: [null, [Validators.required]],
-      sessionDurationMinutes: [null, [Validators.required, Validators.min(1)]]
+      sessionDurationMinutes: [60, [Validators.required, Validators.min(1)]]
     });
 
     this.sessions.push(sessionForm);

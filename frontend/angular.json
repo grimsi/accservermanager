@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "accservermanager-frontend"
+  "defaultProject": "accservermanager-frontend",
+  "cli": {
+    "analytics": false
+  }
 }
